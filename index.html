@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lê Thanh Minh — AI Engineer · Backend Developer · Competitive Programmer</title>
+  <meta name="description" content="Portfolio of Lê Thanh Minh: AI Engineer, Backend Developer, and Competitive Programmer based in Ho Chi Minh City, Vietnam.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Top Sticky Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" aria-label="Lê Thanh Minh - Home">LTM</a>
+
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-controls="primary-nav" aria-expanded="false" aria-label="Toggle navigation menu">
+        Menu
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Primary navigation">
+        <ul class="nav-list">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#work" class="nav-link">Work</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#honors" class="nav-link">Honors</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="container hero-container">
+        <div class="hero-content">
+          <div class="eyebrow">
+            <span aria-hidden="true">📍</span> Ho Chi Minh City
+          </div>
+          <h1 class="hero-title">Lê Thanh Minh</h1>
+          <p class="hero-role">AI Engineer · Backend Developer · Competitive Programmer</p>
+
+          <div class="rotator-wrapper">
+            <span class="rotator-prefix" aria-hidden="true">&gt;</span>
+            <span class="rotator-text" id="rotator-text">Building LLM apps with RAG &amp; multi-agent systems</span>
+            <span class="cursor" aria-hidden="true">|</span>
+          </div>
+
+          <p class="hero-about">
+            Software developer from Vietnam who likes hard problems — algorithms first, then turning them into real products. Work sits where backend engineering, AI/LLM applications, and edge computing meet.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary">View projects</a>
+            <a href="mailto:hmmminhle@gmail.com" class="btn btn-secondary">Email me</a>
+          </div>
+        </div>
+
+        <div class="hero-media">
+          <div class="portrait-card">
+            <div class="portrait-bar" aria-hidden="true"></div>
+            <img src="assets/portrait.jpg" alt="Lê Thanh Minh at the Vingroup AI in Action program" class="portrait-img" width="600" height="750">
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat Row under Hero -->
+      <div class="container">
+        <div class="stats-container" id="stats">
+          <div class="stat-item">
+            <span class="stat-number" data-target="3.95" data-format="float">0.00</span>
+            <span class="stat-label">GPA · BSc IT (Greenwich)</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-target="1532" data-format="int">0</span>
+            <span class="stat-label">Codeforces Max Rating</span>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number-wrapper">
+              <span class="stat-prefix">Top</span>
+              <span class="stat-number" data-target="14" data-format="int">0</span>
+            </div>
+            <span class="stat-label">FPT Edu Hackathon National</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 About Section -->
+    <section id="about" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <span class="section-num">01</span>
+          </div>
+          <h2 class="section-title">About</h2>
+          <p class="section-subtitle">Background, core focus, and engineering foundations.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card">
+            <p class="about-intro">
+              Software developer from Vietnam who likes hard problems — algorithms first, then turning them into real products. Work sits where backend engineering, AI/LLM applications, and edge computing meet.
+            </p>
+
+            <div class="about-details">
+              <div class="about-detail-item">
+                <span class="about-detail-label">Current Focus</span>
+                <span class="about-detail-value">LLM apps, Edge AI, Django &amp; FastAPI</span>
+              </div>
+              <div class="about-detail-item">
+                <span class="about-detail-label">Education</span>
+                <span class="about-detail-value">BSc Information Technology, University of Greenwich (GPA 3.95)</span>
+              </div>
+              <div class="about-detail-item">
+                <span class="about-detail-label">Location</span>
+                <span class="about-detail-value">Ho Chi Minh City, Vietnam</span>
+              </div>
+              <div class="about-detail-item">
+                <span class="about-detail-label">Competitive Profile</span>
+                <span class="about-detail-value">Specialist on Codeforces (Handle: Sagita_Phoenix, Max 1532)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Work / Experience Section -->
+    <section id="work" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <span class="section-num">02</span>
+          </div>
+          <h2 class="section-title">Work</h2>
+          <p class="section-subtitle">Professional engineering and AI roles.</p>
+        </div>
+
+        <div class="timeline">
+          <!-- Role 1: Vingroup -->
+          <div class="timeline-item">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <article class="timeline-card">
+              <div class="timeline-header">
+                <h3 class="timeline-role">AI Engineer</h3>
+                <div class="timeline-company">
+                  <a href="https://vingroup.net" target="_blank" rel="noopener noreferrer">Vingroup — AI in Action Program</a>
+                </div>
+                <div class="timeline-meta">
+                  <span>Ha Noi, Vietnam</span>
+                  <span aria-hidden="true">·</span>
+                  <span>May 2026 – Aug 2026</span>
+                </div>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Selected for Vingroup's competitive, intensive program on business-aligned AI products and AI infrastructure.</li>
+                <li>Built an AI educational assistant (Llama 3 + LangChain) that suggests real-time teaching actions from student engagement, highlighted slide text, and sentiment.</li>
+                <li>Engineered an e-commerce platform on Multi-Agent RAG + ReAct (OpenAI API): a dual-chatbot system for customer support and store management.</li>
+              </ul>
+            </article>
+          </div>
+
+          <!-- Role 2: Datacurve -->
+          <div class="timeline-item">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <article class="timeline-card">
+              <div class="timeline-header">
+                <h3 class="timeline-role">AI Coding Assistant · AI Trainer</h3>
+                <div class="timeline-company">
+                  <a href="https://datacurve.ai" target="_blank" rel="noopener noreferrer">Datacurve</a>
+                </div>
+                <div class="timeline-meta">
+                  <span>Vancouver, Canada — Remote</span>
+                  <span aria-hidden="true">·</span>
+                  <span>Dec 2023 – May 2025</span>
+                </div>
+              </div>
+              <ul class="timeline-bullets">
+                <li>Solved real-world software engineering tasks and documented solutions for LLM training.</li>
+                <li>Reviewed codebases and authored validated datasets for an IDE coding assistant; evaluated and improved LLM outputs.</li>
+              </ul>
+              <div class="timeline-note">
+                <strong>Stack:</strong> Java, Python, Django, MySQL, Prompt Engineering, Data Validation
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Projects Section -->
+    <section id="projects" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <span class="section-num">03</span>
+          </div>
+          <h2 class="section-title">Projects</h2>
+          <p class="section-subtitle">Selected systems, applications, and embedded AI solutions.</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="project-filters" role="group" aria-label="Filter projects by category">
+          <button type="button" class="filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter-btn" data-filter="ai" aria-pressed="false">AI</button>
+          <button type="button" class="filter-btn" data-filter="backend" aria-pressed="false">Backend</button>
+          <button type="button" class="filter-btn" data-filter="edge" aria-pressed="false">Edge</button>
+          <button type="button" class="filter-btn" data-filter="android" aria-pressed="false">Android</button>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-grid">
+          <!-- Project 1: M-Hike -->
+          <article class="project" data-tags="android ai">
+            <div class="project-header">
+              <h3 class="project-title">
+                <a href="https://github.com/SagitaKDX/M-Hike" target="_blank" rel="noopener noreferrer">
+                  M-Hike <span aria-hidden="true">↗</span>
+                </a>
+              </h3>
+              <span class="project-badge">Android · AI</span>
+            </div>
+            <p class="project-desc">
+              Offline-first Android hiking app with a custom Firebase selective-sync algorithm, an AI semantic-search microservice (Gemini embeddings + cosine similarity), and typo-tolerant fuzzy search.
+            </p>
+            <ul class="project-stack" aria-label="Technology stack">
+              <li>Java</li>
+              <li>Android</li>
+              <li>Firebase</li>
+              <li>FastAPI</li>
+            </ul>
+            <div class="project-footer">
+              <a href="https://github.com/SagitaKDX/M-Hike" class="project-link" target="_blank" rel="noopener noreferrer">
+                View Repository ↗
+              </a>
+            </div>
+          </article>
+
+          <!-- Project 2: Real-Time E-Commerce -->
+          <article class="project" data-tags="backend">
+            <div class="project-header">
+              <h3 class="project-title">
+                <a href="https://github.com/SagitaKDX/E-comerce_Project" target="_blank" rel="noopener noreferrer">
+                  Real-Time E-Commerce <span aria-hidden="true">↗</span>
+                </a>
+              </h3>
+              <span class="project-badge">Backend</span>
+            </div>
+            <p class="project-desc">
+              Full e-commerce platform with a custom admin dashboard, loyalty tiers, social login, REST APIs, and WebSocket live chat (Django Channels + Daphne).
+            </p>
+            <ul class="project-stack" aria-label="Technology stack">
+              <li>Django</li>
+              <li>MySQL</li>
+              <li>Redis</li>
+              <li>Celery</li>
+            </ul>
+            <div class="project-footer">
+              <a href="https://github.com/SagitaKDX/E-comerce_Project" class="project-link" target="_blank" rel="noopener noreferrer">
+                View Repository ↗
+              </a>
+            </div>
+          </article>
+
+          <!-- Project 3: Edge-AI Attendance System -->
+          <article class="project" data-tags="edge ai">
+            <div class="project-header">
+              <h3 class="project-title">Edge-AI Attendance System</h3>
+              <span class="project-badge">Edge · AI</span>
+            </div>
+            <p class="project-desc">
+              Automated lab attendance on an NVIDIA Jetson Nano: MOG2 motion detection, human tracking, and face recognition, with secure on-device logging.
+            </p>
+            <ul class="project-stack" aria-label="Technology stack">
+              <li>Python</li>
+              <li>OpenCV</li>
+              <li>Jetson Nano</li>
+            </ul>
+            <div class="project-footer">
+              <span class="project-notice">Embedded / Jetson Hardware</span>
+            </div>
+          </article>
+
+          <!-- Project 4: Offline AI Voice Assistant -->
+          <article class="project" data-tags="edge ai">
+            <div class="project-header">
+              <h3 class="project-title">Offline AI Voice Assistant</h3>
+              <span class="project-badge">Edge · AI</span>
+            </div>
+            <p class="project-desc">
+              Private voice assistant for Mini PCs and Jetson devices — Whisper STT, Piper TTS, and a locally hosted Llama model, no cloud required.
+            </p>
+            <ul class="project-stack" aria-label="Technology stack">
+              <li>Whisper</li>
+              <li>Piper TTS</li>
+              <li>Llama</li>
+            </ul>
+            <div class="project-footer">
+              <span class="project-notice">Fully Offline / Edge Device</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 Skills Section -->
+    <section id="skills" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <span class="section-num">04</span>
+          </div>
+          <h2 class="section-title">Skills</h2>
+          <p class="section-subtitle">Technical toolkit organized by domain.</p>
+        </div>
+
+        <div class="skills-wrapper">
+          <div class="skill-group">
+            <h3 class="skill-group-title">Languages</h3>
+            <div class="skill-chips">
+              <span class="chip">C++</span>
+              <span class="chip">Python</span>
+              <span class="chip">Java</span>
+              <span class="chip">JavaScript</span>
+              <span class="chip">TypeScript</span>
+              <span class="chip">PHP</span>
+              <span class="chip">LaTeX</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group-title">Backend and mobile</h3>
+            <div class="skill-chips">
+              <span class="chip">Django</span>
+              <span class="chip">FastAPI</span>
+              <span class="chip">Bootstrap</span>
+              <span class="chip">Android</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group-title">AI and data</h3>
+            <div class="skill-chips">
+              <span class="chip">OpenCV</span>
+              <span class="chip">LangChain</span>
+              <span class="chip">Llama 3</span>
+              <span class="chip">OpenAI API</span>
+              <span class="chip">Gemini</span>
+              <span class="chip">Hugging Face</span>
+              <span class="chip">Whisper</span>
+              <span class="chip">Piper TTS</span>
+              <span class="chip">NumPy</span>
+              <span class="chip">Pandas</span>
+              <span class="chip">Jupyter</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group-title">Data and cloud</h3>
+            <div class="skill-chips">
+              <span class="chip">MySQL</span>
+              <span class="chip">SQLite</span>
+              <span class="chip">Redis</span>
+              <span class="chip">Firebase</span>
+              <span class="chip">AWS</span>
+              <span class="chip">Azure</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-group-title">Tools and edge</h3>
+            <div class="skill-chips">
+              <span class="chip">Git</span>
+              <span class="chip">GitHub</span>
+              <span class="chip">VS Code</span>
+              <span class="chip">Linux</span>
+              <span class="chip">NVIDIA Jetson</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 Honors Section -->
+    <section id="honors" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <span class="section-num">05</span>
+          </div>
+          <h2 class="section-title">Honors &amp; Community</h2>
+          <p class="section-subtitle">Awards, academic recognition, and competitive programming initiatives.</p>
+        </div>
+
+        <div class="honors-container">
+          <!-- Awards -->
+          <div class="honors-card">
+            <h3 class="honors-heading">Awards &amp; Achievements</h3>
+            <div class="honors-list">
+              <div class="honor-item">
+                <span class="honor-year">2024</span>
+                <span class="honor-text">FPT Edu Hackathon, Top 14 National</span>
+              </div>
+              <div class="honor-item">
+                <span class="honor-year">2024</span>
+                <span class="honor-text">Top 3 Student of the Spring semester, University of Greenwich</span>
+              </div>
+              <div class="honor-item">
+                <span class="honor-year">2024</span>
+                <span class="honor-text">Res Fes, FPT Research Festival participant</span>
+              </div>
+              <div class="honor-item">
+                <span class="honor-year">2024</span>
+                <span class="honor-text">Google AI Essentials; IELTS 7.0</span>
+              </div>
+              <div class="honor-item">
+                <span class="honor-year">2023</span>
+                <span class="honor-text">Greenwich Coding Challenge: First Prize (Junior), Second Prize (Senior)</span>
+              </div>
+              <div class="honor-item">
+                <span class="honor-year">2023</span>
+                <span class="honor-text">Problem Solving (Intermediate); VNOI Certificate</span>
+              </div>
+              <div class="honor-item">
+                <span class="honor-year">2023–</span>
+                <span class="honor-text">Undergraduate Researcher: A novel A* approach for shortest paths to rescue-supply locations during natural and military disasters</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Community & Competitive Programming -->
+          <div class="community-card">
+            <h3 class="honors-heading">Competitive Programming &amp; Community</h3>
+            <div class="community-list">
+              <div class="community-item">
+                <div class="community-role-title">
+                  <a href="https://codeforces.com/profile/Sagita_Phoenix" target="_blank" rel="noopener noreferrer">Codeforces</a> · Specialist (Max 1532)
+                </div>
+                <p class="community-desc">
+                  Handle <code>Sagita_Phoenix</code>. Problem setter and tester for Codeforces Round #983 (Div. 2), played by about 20,000 contestants.
+                </p>
+              </div>
+
+              <div class="community-item">
+                <div class="community-role-title">VNOI · Volunteer (2020–2023)</div>
+                <p class="community-desc">
+                  Prepared and ran algorithm contests for university and gifted high-school students.
+                </p>
+              </div>
+
+              <div class="community-item">
+                <div class="community-role-title">CODEMELY · Algo Leader (2023–now)</div>
+                <p class="community-desc">
+                  CS community of 80,000+. Organized the Rust Bootcamp (VBI, GFI, NEAR APAC) and a CTF competition.
+                </p>
+              </div>
+
+              <div class="community-item">
+                <div class="community-role-title">Dev ơi mình đi đâu thế? · Content writer (2023–now)</div>
+                <p class="community-desc">
+                  CS forum with 100,000 Facebook and 20,000 Discord members.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 Contact Section -->
+    <section id="contact" class="section reveal">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <span class="section-num">06</span>
+          </div>
+          <h2 class="section-title">Contact</h2>
+          <p class="section-subtitle">Reach out for collaborations, engineering opportunities, or technical discussions.</p>
+        </div>
+
+        <div class="contact-card">
+          <p class="contact-lead">
+            Whether you want to discuss LLM systems, edge intelligence, backend architectures, or algorithmic challenges, feel free to connect:
+          </p>
+
+          <div class="contact-links">
+            <a href="mailto:hmmminhle@gmail.com" class="contact-item">
+              <span class="contact-label">Email</span>
+              <span class="contact-value">hmmminhle@gmail.com</span>
+            </a>
+
+            <a href="https://github.com/SagitaKDX" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <span class="contact-label">GitHub</span>
+              <span class="contact-value">github.com/SagitaKDX</span>
+            </a>
+
+            <a href="https://www.linkedin.com/in/l%C3%AA-thanh-minh-08819b295/" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <span class="contact-label">LinkedIn</span>
+              <span class="contact-value">Lê Thanh Minh</span>
+            </a>
+
+            <a href="https://codeforces.com/profile/Sagita_Phoenix" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <span class="contact-label">Codeforces</span>
+              <span class="contact-value">Sagita_Phoenix (1532)</span>
+            </a>
+
+            <a href="https://discord.com/users/620605881704251403" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <span class="contact-label">Discord</span>
+              <span class="contact-value">ID: 620605881704251403</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p class="footer-copy">© 2026 Lê Thanh Minh</p>
+      <a href="https://github.com/SagitaKDX" target="_blank" rel="noopener noreferrer" class="footer-link">
+        github.com/SagitaKDX ↗
+      </a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
