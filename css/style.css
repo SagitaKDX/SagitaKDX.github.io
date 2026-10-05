@@ -240,6 +240,8 @@ ul, ol {
    Hero Section
    ========================================================================== */
 .hero-section {
+  position: relative;
+  overflow: hidden;
   padding-top: 2rem;
   padding-bottom: 3.5rem;
 }
@@ -408,6 +410,7 @@ ul, ol {
   background-color: var(--red);
   z-index: 2;
   border-top-left-radius: 12px;
+  transform-origin: left center;
 }
 
 .portrait-img {
@@ -1258,6 +1261,288 @@ html.js .reveal.is-visible {
 /* ==========================================================================
    Prefers Reduced Motion
    ========================================================================== */
+.hero-section::before,
+.hero-section::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(50px);
+}
+
+.hero-section::before {
+  width: 280px;
+  height: 280px;
+  top: -40px;
+  right: -40px;
+  background-color: var(--blue);
+  animation: hero-drift-blue 14s ease-in-out infinite;
+}
+
+.hero-section::after {
+  width: 220px;
+  height: 220px;
+  bottom: 10%;
+  left: -40px;
+  background-color: var(--red);
+  animation: hero-drift-red 18s ease-in-out infinite;
+}
+
+.hero-container,
+.stats-container {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes hero-drift-blue {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-35px, 30px, 0);
+  }
+}
+
+@keyframes hero-drift-red {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(30px, -25px, 0);
+  }
+}
+
+@keyframes hero-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html.js .hero-content > * {
+  animation: hero-fade-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+html.js .hero-content > .eyebrow {
+  animation-delay: 0.05s;
+}
+
+html.js .hero-content > .hero-title {
+  animation-delay: 0.12s;
+}
+
+html.js .hero-content > .hero-role {
+  animation-delay: 0.2s;
+}
+
+html.js .hero-content > .rotator-wrapper {
+  animation-delay: 0.28s;
+}
+
+html.js .hero-content > .hero-about {
+  animation-delay: 0.36s;
+}
+
+html.js .hero-content > .hero-actions {
+  animation-delay: 0.44s;
+}
+
+@keyframes portrait-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes portrait-pulse {
+  0%, 100% {
+    box-shadow: 10px 10px 0 var(--blue);
+  }
+  50% {
+    box-shadow: 14px 18px 0 var(--blue);
+  }
+}
+
+html.js .portrait-card {
+  animation:
+    portrait-fade-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both,
+    portrait-pulse 4.5s ease-in-out 1s infinite;
+}
+
+@keyframes portrait-bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+html.js .portrait-bar {
+  transform-origin: left center;
+  animation: portrait-bar-grow 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background-color: var(--red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--transition-fast);
+}
+
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.btn {
+  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+html.js .timeline::before {
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.js #work.is-visible .timeline::before,
+html.js .reveal.is-visible .timeline::before {
+  transform: scaleY(1);
+}
+
+@keyframes timeline-dot-pop {
+  0% {
+    transform: scale(0.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+html.js #work.is-visible .timeline-dot {
+  transform-origin: center;
+  animation: timeline-dot-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+html.js #work.is-visible .timeline-item:nth-child(2) .timeline-dot {
+  animation-delay: 0.15s;
+}
+
+@keyframes project-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html.js #projects.is-visible .project {
+  animation: project-entrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+html.js #projects.is-visible .project:nth-child(1) {
+  animation-delay: 0s;
+}
+
+html.js #projects.is-visible .project:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+html.js #projects.is-visible .project:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+html.js #projects.is-visible .project:nth-child(4) {
+  animation-delay: 0.24s;
+}
+
+html.js #projects.is-visible .project:nth-child(n+5) {
+  animation-delay: 0.32s;
+}
+
+.project:hover {
+  transform: translateY(-3px) !important;
+}
+
+@keyframes chip-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html.js #skills.is-visible .chip {
+  animation: chip-entrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+html.js #skills.is-visible .chip:nth-child(1) { animation-delay: 0s; }
+html.js #skills.is-visible .chip:nth-child(2) { animation-delay: 0.04s; }
+html.js #skills.is-visible .chip:nth-child(3) { animation-delay: 0.08s; }
+html.js #skills.is-visible .chip:nth-child(4) { animation-delay: 0.12s; }
+html.js #skills.is-visible .chip:nth-child(5) { animation-delay: 0.16s; }
+html.js #skills.is-visible .chip:nth-child(6) { animation-delay: 0.20s; }
+html.js #skills.is-visible .chip:nth-child(7) { animation-delay: 0.24s; }
+html.js #skills.is-visible .chip:nth-child(8) { animation-delay: 0.28s; }
+html.js #skills.is-visible .chip:nth-child(9) { animation-delay: 0.32s; }
+html.js #skills.is-visible .chip:nth-child(10) { animation-delay: 0.36s; }
+html.js #skills.is-visible .chip:nth-child(n+11) { animation-delay: 0.4s; }
+
+.chip:hover {
+  transform: translateY(-2px) !important;
+}
+
+@keyframes stat-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.stat-number.is-done {
+  display: inline-block;
+  animation: stat-pop 0.35s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -1273,5 +1558,20 @@ html.js .reveal.is-visible {
 
   .cursor {
     display: none !important;
+  }
+
+  .hero-section::before,
+  .hero-section::after,
+  .hero-content > *,
+  .portrait-card,
+  .portrait-bar,
+  .project,
+  .chip,
+  .timeline-dot,
+  .stat-number {
+    animation: none !important;
+  }
+  .timeline::before {
+    transform: none !important;
   }
 }

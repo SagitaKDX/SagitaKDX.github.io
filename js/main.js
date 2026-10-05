@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(step);
           } else {
             el.textContent = isFloat ? target.toFixed(2) : Math.round(target).toString();
+            el.classList.add('is-done');
           }
         };
 
