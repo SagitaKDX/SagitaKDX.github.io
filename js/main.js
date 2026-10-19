@@ -110,7 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'Building LLM apps with RAG & multi-agent systems',
     'Edge AI on NVIDIA Jetson — fully offline',
     'Django · FastAPI · Android backends',
-    'Codeforces Specialist · Round #983 problem setter'
+    'Codeforces Specialist · Round #983 problem setter',
+    'Applied AI R&D @ VinUni · Vingroup'
   ];
 
   if (rotatorText) {

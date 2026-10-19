@@ -1456,6 +1456,8 @@ html.js #work.is-visible .timeline-item:nth-child(2) .timeline-dot {
   animation-delay: 0.15s;
 }
 
+html.js #work.is-visible .timeline-item:nth-child(3) .timeline-dot { animation-delay: 0.3s; }
+
 @keyframes project-entrance {
   from {
     opacity: 0;
