@@ -1,0 +1,2924 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K5 · L3 · Day 02 — Discovery &amp; Problem Framing (Instructor Deck)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --bg-accent-wash: radial-gradient(ellipse at 15% 0%, #e0f2fe 0%, transparent 45%),
+                        radial-gradient(ellipse at 85% 100%, #ccfbf1 0%, transparent 45%),
+                        #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --accent: #0f766e;       /* teal-700 */
+      --accent-light: #f0fdfa;
+      --accent-border: #99f6e4;
+      --accent-2: #0284c7;     /* sky-600 */
+      --accent-2-light: #f0f9ff;
+      --line: #cbd5e1;
+      --line-subtle: #e2e8f0;
+      --ok: #059669;
+      --ok-light: #ecfdf5;
+      --warn: #d97706;
+      --warn-light: #fffbeb;
+      --danger: #dc2626;
+      --danger-light: #fef2f2;
+      
+      --font-display: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-body: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+
+      --fs-hero: clamp(2rem, 3.6vw, 2.85rem);
+      --fs-title: clamp(1.5rem, 2.4vw, 1.95rem);
+      --fs-sub: 0.78rem;
+      --fs-body: 0.95rem;
+      --fs-small: 0.84rem;
+      --fs-mono: 0.8125rem;
+      --fs-timer: clamp(1.35rem, 2.2vw, 1.75rem);
+      --lh-body: 1.5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-accent-wash);
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top persistent header / CP Rail */
+    header.deck-header {
+      height: 58px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      z-index: 100;
+      gap: 1rem;
+    }
+
+    .brand-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      background: #0f766e15;
+      color: var(--accent);
+      padding: 0.22rem 0.55rem;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      border: 1px solid #0f766e35;
+    }
+
+    /* CP Timeline Rail */
+    .cp-timeline-rail {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cp-timeline-rail::-webkit-scrollbar { display: none; }
+
+    .cp-node {
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+      border: 1px solid var(--line);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .cp-node:hover {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    @keyframes railPulse {
+      0%, 100% {
+        transform: scale(1.06);
+        box-shadow: 0 0 8px rgba(15, 118, 110, 0.45);
+      }
+      50% {
+        transform: scale(1.12);
+        box-shadow: 0 0 16px rgba(15, 118, 110, 0.75);
+      }
+    }
+
+    .cp-node.active-rail {
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 700;
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(15, 118, 110, 0.45);
+      animation: railPulse 2s infinite ease-in-out;
+    }
+
+    .cp-node.completed-rail {
+      background: #e6fffa;
+      color: var(--accent);
+      border-color: #99f6e4;
+    }
+
+    /* Timer Panel */
+    .cp-timer-panel {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.25rem 0.65rem;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+      white-space: nowrap;
+    }
+
+    .timer-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.15;
+    }
+
+    .timer-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .timer-status-badge {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.05rem 0.32rem;
+      border-radius: 3px;
+      background: #e2e8f0;
+      color: #64748b;
+    }
+
+    .cp-timer-panel.running .timer-status-badge {
+      background: #dcfce7;
+      color: var(--ok);
+    }
+
+    .cp-timer-panel.paused .timer-status-badge {
+      background: #fef3c7;
+      color: var(--warn);
+    }
+
+    .cp-timer-panel.overtime .timer-status-badge {
+      background: #fee2e2;
+      color: var(--danger);
+    }
+
+    .timer-display {
+      font-family: var(--font-mono);
+      font-size: var(--fs-timer);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      min-width: 4.8ch;
+      text-align: center;
+      line-height: 1;
+    }
+
+    @keyframes timerWarnPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(1.06); }
+    }
+
+    @keyframes timerShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-2.5px); }
+      40%, 80% { transform: translateX(2.5px); }
+    }
+
+    .cp-timer-panel.warn .timer-display {
+      color: var(--warn);
+      animation: timerWarnPulse 1.2s infinite ease-in-out;
+    }
+    .cp-timer-panel.overtime {
+      animation: timerShake 2s infinite ease-in-out;
+      border-color: #fca5a5;
+    }
+    .cp-timer-panel.overtime .timer-display {
+      color: var(--danger);
+      animation: timerPulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.04); }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-icon {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.3rem 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }
+
+    .btn-icon:hover {
+      background: #f1f5f9;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-icon.active {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Main Deck Container */
+    #deck {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 108px);
+      overflow: hidden;
+    }
+
+    /* Individual Slide */
+    @keyframes slideCardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes slideHeaderEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.8rem 3.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(16px) scale(0.995);
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.4s;
+      pointer-events: none;
+      max-width: 1380px;
+      margin: 0 auto;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .slide.active .slide-subtitle {
+      animation: slideHeaderEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.05s;
+    }
+
+    .slide.active .slide-title {
+      animation: slideHeaderEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.09s;
+    }
+
+    .slide.active .cp-meta-bar {
+      animation: slideHeaderEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.11s;
+    }
+
+    .slide.active .cp-meta-bar .badge-pill:nth-child(1) {
+      animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.13s;
+    }
+    .slide.active .cp-meta-bar .badge-pill:nth-child(2) {
+      animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.17s;
+    }
+    .slide.active .cp-meta-bar .badge-pill:nth-child(3) {
+      animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.21s;
+    }
+    .slide.active .cp-meta-bar .badge-pill:nth-child(4) {
+      animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.25s;
+    }
+    .slide.active .cp-meta-bar .badge-pill:nth-child(5) {
+      animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.29s;
+    }
+
+    .slide.active .slide-card:nth-child(1) {
+      animation: slideCardEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.14s;
+    }
+
+    .slide.active .slide-card:nth-child(2) {
+      animation: slideCardEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.20s;
+    }
+
+    .slide.active .slide-card:nth-child(3) {
+      animation: slideCardEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.26s;
+    }
+
+    .slide.active .slide-card:nth-child(4) {
+      animation: slideCardEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.32s;
+    }
+
+    .slide.active .slide-card:nth-child(5) {
+      animation: slideCardEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.38s;
+    }
+
+    .slide.active .slide-card:nth-child(6) {
+      animation: slideCardEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.44s;
+    }
+
+    .slide.active tbody tr:nth-child(1) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.12s; }
+    .slide.active tbody tr:nth-child(2) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.16s; }
+    .slide.active tbody tr:nth-child(3) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.20s; }
+    .slide.active tbody tr:nth-child(4) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.24s; }
+    .slide.active tbody tr:nth-child(5) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.28s; }
+    .slide.active tbody tr:nth-child(6) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.32s; }
+    .slide.active tbody tr:nth-child(7) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.36s; }
+    .slide.active tbody tr:nth-child(8) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.40s; }
+    .slide.active tbody tr:nth-child(9) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.44s; }
+    .slide.active tbody tr:nth-child(10) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.48s; }
+    .slide.active tbody tr:nth-child(11) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.52s; }
+    .slide.active tbody tr:nth-child(12) { animation: slideCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.56s; }
+
+    /* Typography & Hierarchy */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .slide-subtitle {
+      color: var(--accent-2);
+      font-size: var(--fs-sub);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-title);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* Slide Cards & Grids */
+    .card-grid {
+      display: grid;
+      gap: 1.1rem;
+      width: 100%;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .slide-card {
+      background: var(--surface);
+      border: 1px solid var(--line-subtle);
+      border-radius: 12px;
+      padding: 1.1rem 1.35rem;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.035);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .slide-card.accent-border { border-left: 4px solid var(--accent); }
+    .slide-card.accent-2-border { border-left: 4px solid var(--accent-2); }
+    .slide-card.warn-border { border-left: 4px solid var(--warn); }
+    .slide-card.danger-border { border-left: 4px solid var(--danger); }
+    .slide-card.ok-border { border-left: 4px solid var(--ok); }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .card-body {
+      color: #334155;
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+    }
+
+    /* CP 4-Quadrant Standard Layout */
+    .cp-layout-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.2rem;
+      width: 100%;
+    }
+
+    .cp-meta-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .badge-pill {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .badge-teal { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
+    .badge-sky { background: var(--accent-2-light); color: var(--accent-2); border: 1px solid #bae6fd; }
+    .badge-amber { background: var(--warn-light); color: var(--warn); border: 1px solid #fde68a; }
+    .badge-rose { background: var(--danger-light); color: var(--danger); border: 1px solid #fecdd3; }
+    .badge-emerald { background: var(--ok-light); color: var(--ok); border: 1px solid #a7f3d0; }
+    .badge-slate { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+
+    .coach-box {
+      background: #f0fdfa;
+      border: 1px solid var(--accent-border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+
+    .coach-box-title {
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .coach-bullets {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .coach-bullets li {
+      font-size: 0.88rem;
+      color: #1e293b;
+      line-height: 1.45;
+      position: relative;
+      padding-left: 1.25rem;
+    }
+
+    .coach-bullets li::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .anti-box {
+      background: var(--danger-light);
+      border: 1px solid #fecdd3;
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+    }
+
+    .anti-box-title {
+      color: var(--danger);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.45rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .anti-bullets {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .anti-bullets li {
+      font-size: 0.86rem;
+      color: #991b1b;
+      line-height: 1.4;
+      position: relative;
+      padding-left: 1.15rem;
+    }
+
+    .anti-bullets li::before {
+      content: "✕";
+      position: absolute;
+      left: 0;
+      color: var(--danger);
+      font-weight: bold;
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .data-table th, .data-table td {
+      padding: 0.55rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line-subtle);
+    }
+
+    .data-table th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: var(--text);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #f8fafc; }
+
+    /* Code blocks */
+    code, pre {
+      font-family: var(--font-mono);
+    }
+
+    code.inline-code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      border: 1px solid #e2e8f0;
+      font-weight: 600;
+    }
+
+    pre.code-block {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: var(--fs-mono);
+      line-height: 1.45;
+      overflow-x: auto;
+    }
+
+    /* Deck Footer */
+    footer.deck-footer {
+      height: 50px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+      z-index: 90;
+    }
+
+    .slide-counter {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 60px;
+    }
+
+    .progress-dots {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex: 1;
+      justify-content: center;
+      max-width: 650px;
+      overflow-x: auto;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dot:hover {
+      background: var(--text-muted);
+      transform: scale(1.2);
+    }
+
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.35);
+      box-shadow: 0 0 8px rgba(15, 118, 110, 0.6);
+    }
+
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-nav {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text);
+      transition: all 0.15s ease;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Speaker Notes Drawer */
+    #speaker-notes-drawer {
+      position: fixed;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      color: #f8fafc;
+      padding: 1.25rem 2.5rem;
+      border-top: 2px solid var(--accent);
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
+      transform: translateY(105%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 95;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    #speaker-notes-drawer.open {
+      transform: translateY(0);
+    }
+
+    .notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 0.4rem;
+    }
+
+    .notes-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5eead4;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .notes-close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .notes-close:hover { color: #ffffff; }
+
+    .notes-content {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+
+    .notes-content strong { color: #38bdf8; }
+    .notes-content ul { padding-left: 1.2rem; margin-top: 0.35rem; }
+    .notes-content li { margin-bottom: 0.25rem; }
+
+    /* CTA Button on final slide */
+    @keyframes ctaBreathe {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
+      }
+      50% {
+        transform: scale(1.035);
+        box-shadow: 0 8px 24px rgba(15, 118, 110, 0.6);
+      }
+    }
+
+    .btn-kickoff {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 1.8rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      animation: ctaBreathe 2.4s ease-in-out infinite;
+    }
+
+    .btn-kickoff:hover {
+      animation: none;
+      background: #115e59;
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 8px 24px rgba(15, 118, 110, 0.55);
+    }
+
+    /* Accessibility / reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+      .slide {
+        transition: none !important;
+        transform: none !important;
+      }
+      .slide.active {
+        transform: none !important;
+      }
+      .slide.active .slide-subtitle,
+      .slide.active .slide-title,
+      .slide.active .cp-meta-bar,
+      .slide.active .badge-pill,
+      .slide.active .slide-card,
+      .slide.active tbody tr,
+      .cp-node.active-rail,
+      .cp-timer-panel.warn .timer-display,
+      .cp-timer-panel.overtime,
+      .btn-kickoff,
+      .dot.active {
+        animation: none !important;
+        transform: none !important;
+      }
+      .cp-node {
+        transition: none !important;
+      }
+      #speaker-notes-drawer {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Persistent Deck Header -->
+  <header class="deck-header">
+    <div class="brand-meta">
+      <span>K5 · L3 · Day 02</span>
+      <span class="brand-badge">Discovery &amp; Problem Framing</span>
+    </div>
+
+    <!-- CP Timeline Rail -->
+    <nav class="cp-timeline-rail" aria-label="Checkpoint Timeline">
+      <div class="cp-node" data-cp="0" onclick="goToCP(0)" title="CP0: Đọc bài mẫu (15')">CP0 15′</div>
+      <div class="cp-node" data-cp="1" onclick="goToCP(1)" title="CP1: Scan 5+ problems (25')">CP1 25′</div>
+      <div class="cp-node" data-cp="2" onclick="goToCP(2)" title="CP2: Top 3 cards (35')">CP2 35′</div>
+      <div class="cp-node" data-cp="3" onclick="goToCP(3)" title="CP3: Hội tụ nhóm (30')">CP3 30′</div>
+      <div class="cp-node" data-cp="4" onclick="goToCP(4)" title="CP4: Mom Test &amp; Research (30')">CP4 30′</div>
+      <div class="cp-node" data-cp="5" onclick="goToCP(5)" title="CP5: Before/After &amp; PS v0 (45')">CP5 45′</div>
+      <div class="cp-node" data-cp="6" onclick="goToCP(6)" title="CP6: Mức AI &amp; Quyết định (25')">CP6 25′</div>
+      <div class="cp-node" data-cp="7" onclick="goToCP(7)" title="CP7: Reflection cá nhân (15')">CP7 15′</div>
+    </nav>
+
+    <!-- CP Timer Panel -->
+    <div class="cp-timer-panel" id="timer-panel">
+      <div class="timer-meta">
+        <span class="timer-label" id="timer-label">Lab Sẵn sàng</span>
+        <span class="timer-status-badge" id="timer-status">CHỜ</span>
+      </div>
+      <div class="timer-display" id="timer-display">00:00</div>
+      <div class="header-actions">
+        <button class="btn-icon" id="btn-timer-toggle" onclick="toggleTimer()" title="Pause/Resume (Phím P)">⏯ P</button>
+        <button class="btn-icon" id="btn-timer-reset" onclick="resetTimer()" title="Reset về đầu (Phím R)">↺ R</button>
+      </div>
+    </div>
+
+    <!-- Utilities / Sound / Notes / Fullscreen -->
+    <div class="header-actions">
+      <button class="btn-icon" id="btn-sound-toggle" onclick="toggleMute()" title="Bật/Tắt hiệu ứng âm thanh (Phím M)">
+        <span id="sound-icon">🔇</span> SFX
+      </button>
+      <button class="btn-icon" id="btn-music-toggle" onclick="toggleMusic()" title="Bật/Tắt nhạc nền Ambient (Phím B)">
+        <span id="music-icon">🎵</span> Nhạc
+      </button>
+      <button class="btn-icon" id="btn-notes-toggle" onclick="toggleSpeakerNotes()" title="Ghi chú giảng viên (Phím N)">
+        📝 Notes
+      </button>
+      <button class="btn-icon" onclick="toggleFullscreen()" title="Toàn màn hình (Phím F)">
+        ⛶
+      </button>
+    </div>
+  </header>
+
+  <!-- Deck Slides Container -->
+  <main id="deck">
+
+    <!-- SLIDE 0: Title & Overview -->
+    <section class="slide active" data-index="0">
+      <div class="slide-subtitle">VinUni AI20k · K5 Level 3 (L3A / L3B) · 240 Phút</div>
+      <h1 class="slide-title" style="font-size: var(--fs-hero); margin-bottom: 0.6rem;">K5 · L3 · Day 02 — Discovery &amp; Problem Framing</h1>
+      <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.4rem;">
+        Hôm nay bạn chưa xây AI. Hôm nay bạn <strong>tìm đúng bài toán</strong>: đi từ vấn đề thật quanh mình, vẽ quy trình, viết Problem Statement đủ chặt, kiểm chứng với người thật, rồi mới quyết định có dùng AI không.
+      </p>
+
+      <div class="card-grid grid-4" style="margin-bottom: 1.4rem;">
+        <div class="slide-card accent-border">
+          <div class="card-title">💎 Double Diamond</div>
+          <div class="card-body">Đi trọn vẹn nửa đầu: <strong>Discover (Mở rộng)</strong> cá nhân scan ➔ <strong>Define (Thu hẹp)</strong> nhóm hội tụ.</div>
+        </div>
+        <div class="slide-card accent-2-border">
+          <div class="card-title">👥 Hình thức phối hợp</div>
+          <div class="card-body">Cá nhân (CP1, CP2, CP7) + Nhóm 3–4 người (CP3–CP6). Một repo nhóm chung do nhóm trưởng fork.</div>
+        </div>
+        <div class="slide-card warn-border">
+          <div class="card-title">🎯 Đầu ra bài lab</div>
+          <div class="card-body">1 <strong>Problem Statement</strong> đã kiểm chứng và 1 quyết định <strong>Go / Not Yet / No-Go</strong> có lý do đo được.</div>
+        </div>
+        <div class="slide-card ok-border">
+          <div class="card-title">⚖️ Triết lý cốt lõi</div>
+          <div class="card-body">Kết luận <em>"không cần AI"</em> vẫn là kết luận xuất sắc nếu lập luận chặt và quy trình tối ưu bằng No AI / Rule.</div>
+        </div>
+      </div>
+
+      <div style="background: #f1f5f9; border-radius: 8px; padding: 0.75rem 1.2rem; font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;">
+        <div>⌨️ Điều khiển: <code>←</code> <code>→</code> hoặc <code>Space</code> chuyển slide · <code>P</code> tạm dừng timer · <code>R</code> reset · <code>M</code> âm thanh · <code>N</code> speaker notes</div>
+        <div style="font-weight: 700; color: var(--accent);">Bấm Next để vào cấu trúc buổi học ➔</div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Chào lớp &amp; Neo tư duy:</strong>
+        <ul>
+          <li>Nhắc nhở học viên: Hôm nay tuyệt đối không lao vào code hay xây agent. Rất nhiều team thất bại vì giải sai bài toán.</li>
+          <li>Giảng viên giới thiệu cấu trúc buổi học 240 phút gồm 2 giai đoạn: Discover cá nhân (sáng tạo, mở rộng góc nhìn) và Define nhóm (phản biện, hội tụ, gọt giũa).</li>
+          <li>Nhấn mạnh: Kết luận "No-Go" hoặc "Dùng checklist/Rule không dùng AI" vẫn đạt điểm tối đa nếu nhóm phân tích 4 rủi ro và quy trình chuẩn xác.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 1: Hình thức & Double Diamond -->
+    <section class="slide" data-index="1">
+      <div class="slide-subtitle">Cấu trúc làm việc &amp; Phương pháp luận</div>
+      <h2 class="slide-title">Hình thức: Cá nhân + Nhóm · Double Diamond Discover ➔ Define</h2>
+
+      <div style="background: #0f172a; color: #f8fafc; border-radius: 10px; padding: 1.1rem 1.4rem; font-family: var(--font-mono); font-size: 0.95rem; margin-bottom: 1.3rem; box-shadow: 0 4px 12px rgba(15,23,42,0.1);">
+<pre style="margin: 0; line-height: 1.5;">
+     DISCOVER (mở rộng)              DEFINE (thu hẹp)
+   ◇ cá nhân scan rộng  ──────▶  ◇ nhóm hội tụ về 1 Problem Statement
+   CP1 → CP2                       CP3 → CP4 → CP5 → CP6
+</pre>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="slide-card accent-border">
+          <div class="card-title">
+            <span class="badge-pill badge-teal">CÁ NHÂN</span>
+            <span>CP0 · CP1 · CP2 · CP7</span>
+          </div>
+          <div class="card-body">
+            <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+              <li><strong>CP0:</strong> Đọc bài mẫu, nắm rõ tiêu chuẩn sản phẩm đầu ra (15').</li>
+              <li><strong>CP1:</strong> Tự scan ≥5 problem theo 4 lăng kính, viết Job Story (25').</li>
+              <li><strong>CP2:</strong> Chọn Top 3 cards + vẽ quy trình nháp có bottleneck (35').</li>
+              <li><strong>CP7:</strong> Tự viết Reflection và nắm vững chuỗi 6 mắt xích (15').</li>
+              <li>Mỗi người tự commit file <code>report/individual/MSSV_HoTen.md</code> của mình.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-card accent-2-border">
+          <div class="card-title">
+            <span class="badge-pill badge-sky">NHÓM 3–4 BẠN</span>
+            <span>CP3 · CP4 · CP5 · CP6</span>
+          </div>
+          <div class="card-body">
+            <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+              <li><strong>CP3:</strong> Pitch &amp; hội tụ cây OST từ 9–12 cards về 1 candidate (30').</li>
+              <li><strong>CP4:</strong> Phỏng vấn Mom Test + research giải pháp đã có trên thị trường (30').</li>
+              <li><strong>CP5:</strong> Vẽ quy trình Trước/Sau + Problem Statement v0 (45').</li>
+              <li><strong>CP6:</strong> Chọn mức can thiệp AI ladder + PS v1 + quyết định Go/No-Go (25').</li>
+              <li>Làm chung trên 1 file <code>report/team/group_report.md</code> trong repo chung.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Lưu ý Giảng viên về cơ chế Nhóm &amp; Cá nhân:</strong>
+        <ul>
+          <li>Nhóm 3-4 người. Nhóm trưởng là người bấm Fork repo mẫu và đặt tên đúng cú pháp.</li>
+          <li>Cảnh báo tình trạng "chia nhỏ rồi ghép cơ học": CP3 và CP5 bắt buộc cả nhóm phải ngồi thảo luận trực tiếp cùng nhau.</li>
+          <li>Nhắc sinh viên: Bài cá nhân tự làm bằng trải nghiệm thật của mình, không sao chép scan của bạn cùng nhóm.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Mục tiêu học tập -->
+    <section class="slide" data-index="2">
+      <div class="slide-subtitle">Learning Goals · 4 Chuẩn đầu ra trọng tâm</div>
+      <h2 class="slide-title">4 Mục tiêu học tập của Lab Day 02</h2>
+
+      <div class="card-grid grid-2" style="gap: 1.2rem;">
+        <div class="slide-card accent-border">
+          <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent); letter-spacing: 0.05em;">MỤC TIÊU 1 · DISCOVER</div>
+          <div class="card-title" style="font-size: 1.05rem;">Mô tả bài toán không bắt đầu từ giải pháp</div>
+          <div class="card-body">
+            Mô tả vấn đề theo <strong>Actor, Quy trình, Bottleneck, Metric</strong> thay vì nói "em muốn làm chatbot/app AI". Áp dụng Job Story (Jobs-to-be-Done) và Opportunity Solution Tree (OST).
+          </div>
+        </div>
+
+        <div class="slide-card accent-2-border">
+          <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent-2); letter-spacing: 0.05em;">MỤC TIÊU 2 · DEFINE / VALIDATE</div>
+          <div class="card-title" style="font-size: 1.05rem;">Kiểm chứng bằng hành vi đã xảy ra</div>
+          <div class="card-body">
+            Dùng kỹ thuật <strong>The Mom Test</strong> để phỏng vấn người thật: hỏi về hành vi quá khứ cụ thể, ghi nhận tín hiệu phản bác, không tìm kiếm lời khen hay giả định "bạn có thích không".
+          </div>
+        </div>
+
+        <div class="slide-card ok-border">
+          <div style="font-size: 0.76rem; font-weight: 800; color: var(--ok); letter-spacing: 0.05em;">MỤC TIÊU 3 · FRAMING</div>
+          <div class="card-title" style="font-size: 1.05rem;">Problem Statement đo được &amp; có boundary</div>
+          <div class="card-body">
+            Viết <strong>Problem Statement (v0/v1)</strong> với Success Metric có đủ <em>baseline + target + cách đo</em>; định nghĩa boundary đanh thép và tiêu chí đánh giá chất lượng đầu ra AI (Lean UX, Google PAIR).
+          </div>
+        </div>
+
+        <div class="slide-card warn-border">
+          <div style="font-size: 0.76rem; font-weight: 800; color: var(--warn); letter-spacing: 0.05em;">MỤC TIÊU 4 · DECISION</div>
+          <div class="card-title" style="font-size: 1.05rem;">Chọn mức AI tối giản &amp; Quyết định theo 4 rủi ro</div>
+          <div class="card-body">
+            Định vị chính xác mức can thiệp trên thang <strong>No AI / Rule / Workflow / Agent</strong>; đánh giá 4 rủi ro <em>Value, Usability, Feasibility, Viability</em> và chốt <strong>Go / Not Yet / No-Go</strong> có ngưỡng dừng.
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Trọng tâm đánh giá của 4 mục tiêu:</strong>
+        <ul>
+          <li>Mục tiêu 1: Trừ điểm nặng nếu sinh viên viết "Khi cần chatbot..." trong Job Story.</li>
+          <li>Mục tiêu 2: Cấm bịa phỏng vấn. Bịa = 0 điểm C7 cả nhóm.</li>
+          <li>Mục tiêu 3: Metric phải có con số hiện tại (baseline) và con số mong muốn (target). "Tiện hơn, nhanh hơn" không phải là metric.</li>
+          <li>Mục tiêu 4: Đánh giá cao nhóm chọn No AI hoặc Rule nếu bài toán chỉ cần quy trình tốt hơn.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Lịch trình 240 phút -->
+    <section class="slide" data-index="3">
+      <div class="slide-subtitle">Timeboxing · Quản lý tiến độ 4 tiếng</div>
+      <h2 class="slide-title">Lịch trình 240' chi tiết (CP0 ➔ CP7)</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 70px;">Thời gian</th>
+            <th style="width: 190px;">Mốc Checkpoint</th>
+            <th style="width: 100px;">Ai làm</th>
+            <th style="width: 110px;">Giai đoạn</th>
+            <th>Nhiệm vụ trọng tâm &amp; Sản phẩm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>15'</strong></td>
+            <td><span class="badge-pill badge-slate">CP0</span> <strong>Đọc bài mẫu</strong></td>
+            <td>Cá nhân</td>
+            <td>Chuẩn bị</td>
+            <td>Đọc <code>docs/02-deliverable-example.md</code> để thấy chuẩn mực đầu ra cuối cùng</td>
+          </tr>
+          <tr>
+            <td><strong>25'</strong></td>
+            <td><span class="badge-pill badge-teal">CP1</span> <strong>Scan 5+ problems</strong></td>
+            <td>Cá nhân</td>
+            <td><strong style="color:var(--accent);">Discover</strong></td>
+            <td>Scan ≥5 nỗi đau thật theo 4 lăng kính, viết Job Story không chứa giải pháp</td>
+          </tr>
+          <tr>
+            <td><strong>35'</strong></td>
+            <td><span class="badge-pill badge-teal">CP2</span> <strong>Top 3 Cards &amp; Quy trình</strong></td>
+            <td>Cá nhân</td>
+            <td><strong style="color:var(--accent);">Discover</strong></td>
+            <td>3 Problem Cards + 3 sơ đồ quy trình nháp có thời gian &amp; đánh dấu bottleneck</td>
+          </tr>
+          <tr style="background: #fefce8;">
+            <td><strong>10'</strong></td>
+            <td colspan="4" style="color: #854d0e; font-weight: 700;">☕ Nghỉ giải lao lần 1 — Khép lại pha Discover cá nhân, chuẩn bị hội tụ nhóm</td>
+          </tr>
+          <tr>
+            <td><strong>30'</strong></td>
+            <td><span class="badge-pill badge-sky">CP3</span> <strong>Hội tụ nhóm</strong></td>
+            <td>Nhóm</td>
+            <td><strong style="color:var(--accent-2);">Define</strong></td>
+            <td>Pitch không AI, gom cluster, dựng cây OST rút gọn, chấm 7 tiêu chí chọn 1 candidate</td>
+          </tr>
+          <tr>
+            <td><strong>30'</strong></td>
+            <td><span class="badge-pill badge-sky">CP4</span> <strong>Kiểm chứng &amp; Research</strong></td>
+            <td>Nhóm</td>
+            <td><strong style="color:var(--accent-2);">Define</strong></td>
+            <td>Assumption Map + phỏng vấn Mom Test người thật (cấm bịa) + research 2-3 giải pháp</td>
+          </tr>
+          <tr>
+            <td><strong>45'</strong></td>
+            <td><span class="badge-pill badge-sky">CP5</span> <strong>Before/After &amp; PS v0</strong></td>
+            <td>Nhóm</td>
+            <td><strong style="color:var(--accent-2);">Define</strong></td>
+            <td>Vẽ quy trình Trước/Sau có HITL &amp; fallback; viết Problem Statement v0 đủ 6 trường</td>
+          </tr>
+          <tr style="background: #fefce8;">
+            <td><strong>10'</strong></td>
+            <td colspan="4" style="color: #854d0e; font-weight: 700;">☕ Nghỉ giải lao lần 2 — Hoàn thiện PS v0, chuẩn bị xác định mức AI &amp; quyết định</td>
+          </tr>
+          <tr>
+            <td><strong>25'</strong></td>
+            <td><span class="badge-pill badge-sky">CP6</span> <strong>Mức AI &amp; Quyết định</strong></td>
+            <td>Nhóm</td>
+            <td><strong style="color:var(--accent-2);">Define</strong></td>
+            <td>Thang AI ladder, PS v1 + tiêu chí eval, đánh giá 4 rủi ro, chốt Go/No-Go có ngưỡng dừng</td>
+          </tr>
+          <tr>
+            <td><strong>15'</strong></td>
+            <td><span class="badge-pill badge-slate">CP7</span> <strong>Reflection cá nhân</strong></td>
+            <td>Cá nhân</td>
+            <td>Đóng gói</td>
+            <td>Báo cáo vai trò, nhật ký dùng AI, bài học đổi ý &gt;200 từ, hiểu chuỗi 6 mắt xích</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Chiến lược Pacing cho Giảng viên:</strong>
+        <ul>
+          <li>Luôn bật timer ở góc trên màn hình khi bắt đầu mỗi checkpoint.</li>
+          <li>Đặc biệt chú ý CP2 (35') và CP5 (45') là hai checkpoint dài và nặng nhất. Giảng viên cần nhắc giờ khi còn 10 phút.</li>
+          <li>Đảm bảo đúng 10 phút nghỉ giải lao để sinh viên reset não trước khi chuyển sang tranh luận nhóm ở CP3.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Fork & Đặt tên repo + file cá nhân -->
+    <section class="slide" data-index="4">
+      <div class="slide-subtitle">Quy tắc nộp bài &amp; Tránh mất điểm oan</div>
+      <h2 class="slide-title">Fork &amp; Đặt tên Repo + File cá nhân</h2>
+
+      <div class="card-grid grid-2" style="margin-bottom: 1.2rem;">
+        <div class="slide-card accent-border">
+          <div class="card-title">1. Tên Repo nhóm (Nhóm trưởng fork)</div>
+          <div class="card-body">
+            <p style="margin-bottom: 0.5rem;">Cú pháp bắt buộc chuẩn chương trình:</p>
+            <pre class="code-block">K5-&lt;L3A hoặc L3B&gt;-DAY02-HoVaTen-MSSV-DiscoveryProblemFraming</pre>
+            <p style="margin-top: 0.5rem; font-size: 0.88rem;">
+              Ví dụ nhóm trưởng Nguyễn Văn An, MSSV 20241234, lớp L3A:<br>
+              <code class="inline-code">K5-L3A-DAY02-NguyenVanAn-20241234-DiscoveryProblemFraming</code>
+            </p>
+            <div style="font-size: 0.8rem; color: var(--accent); font-weight: 700; margin-top: 0.4rem;">
+               Quy tắc: Họ tên TRƯỚC, MSSV SAU, nối bằng dấu gạch ngang <code>-</code>, không dấu.
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-card accent-2-border">
+          <div class="card-title">2. Tên File báo cáo cá nhân</div>
+          <div class="card-body">
+            <p style="margin-bottom: 0.5rem;">Nằm trong thư mục <code>report/individual/</code>:</p>
+            <pre class="code-block">report/individual/MSSV_HoTen.md</pre>
+            <p style="margin-top: 0.5rem; font-size: 0.88rem;">
+              Ví dụ file của thành viên Nguyễn Văn An:<br>
+              <code class="inline-code">report/individual/20241234_NguyenVanAn.md</code>
+            </p>
+            <div style="font-size: 0.8rem; color: var(--accent-2); font-weight: 700; margin-top: 0.4rem;">
+               Quy tắc: MSSV TRƯỚC, Họ tên SAU, nối bằng dấu gạch dưới <code>_</code>, không dấu.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-card danger-border">
+        <div class="card-title" style="color: var(--danger);">⚠️ Cảnh báo lỗi trừ điểm nặng (Trừ 5 điểm trực tiếp)</div>
+        <div class="card-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.86rem;">
+          <div>
+            <strong>Lỗi tên repo thường gặp:</strong>
+            <ul style="padding-left: 1rem; color: #991b1b; margin-top: 0.2rem;">
+              <li>Đặt tên nhóm tự do ("Nhom1-SieuNhan", "AI-Team") ➔ Sai.</li>
+              <li>Quên mã lớp L3A / L3B hoặc ghi sai ngày <code>DAY2</code> thay vì <code>DAY02</code>.</li>
+            </ul>
+          </div>
+          <div>
+            <strong>Lỗi file cá nhân thường gặp:</strong>
+            <ul style="padding-left: 1rem; color: #991b1b; margin-top: 0.2rem;">
+              <li>Quên đổi tên file mẫu <code>MSSV_HoTen.md</code> ➔ Bị coi là chưa nộp.</li>
+              <li>Đảo ngược thứ tự <code>NguyenVanAn_20241234.md</code> hoặc dùng dấu <code>-</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Hành động của Giảng viên trong 10 phút đầu:</strong>
+        <ul>
+          <li>Đi một vòng kiểm tra nhóm trưởng đã fork và đổi tên repo đúng cú pháp chưa.</li>
+          <li>Nhắc nhóm trưởng vào <em>Settings ➔ Collaborators</em> để invite tất cả thành viên trong nhóm ngay, tránh việc thành viên không push được commit.</li>
+          <li>Nhắc nhở: Mỗi thành viên nộp link repo nhóm trên LMS bằng tài khoản riêng của mình.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Luật vàng / AI Boundaries -->
+    <section class="slide" data-index="5">
+      <div class="slide-subtitle">Liêm chính học thuật &amp; Ranh giới công nghệ</div>
+      <h2 class="slide-title">Luật vàng &amp; Ranh giới sử dụng AI (AI Boundaries)</h2>
+
+      <table class="data-table" style="margin-bottom: 1.1rem;">
+        <thead>
+          <tr>
+            <th style="width: 140px;">Checkpoint</th>
+            <th style="width: 110px;">Dùng AI?</th>
+            <th>Cách dùng ĐÚNG theo quy định</th>
+            <th style="width: 250px;">HÀNH VI BỊ CẤM / PHẠT NẶNG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CP1 Scan</strong></td>
+            <td><span class="badge-pill badge-emerald">SAU KHI TỰ SCAN</span></td>
+            <td>Tự scan 5+ vấn đề trước. Dùng AI gợi ý thêm góc nhìn rồi tự chắt lọc.</td>
+            <td>Để AI scan thay từ đầu; đưa solution vào Job Story.</td>
+          </tr>
+          <tr>
+            <td><strong>CP2 Cards</strong></td>
+            <td><span class="badge-pill badge-emerald">ĐƯỢC DÙNG</span></td>
+            <td>Dùng AI đóng vai <em>"PM hoài nghi"</em> để phản biện card và quy trình.</td>
+            <td>Nhờ AI bịa ra nỗi đau hoặc số liệu thay cho trải nghiệm thật.</td>
+          </tr>
+          <tr>
+            <td><strong>CP3 Pitch</strong></td>
+            <td><span class="badge-pill badge-rose">TUYỆT ĐỐI KHÔNG</span></td>
+            <td>Người thật trình bày 1-2 phút và đồng đội trực tiếp đặt câu hỏi chất vấn.</td>
+            <td>Dùng AI soạn văn pitch hoặc tóm tắt hộ tranh luận nhóm.</td>
+          </tr>
+          <tr>
+            <td><strong>CP4 Phỏng vấn</strong></td>
+            <td><span class="badge-pill badge-rose">TUYỆT ĐỐI KHÔNG</span></td>
+            <td>Người thật hỏi người thật (bạn học, người quen). Thu thập bằng chứng quá khứ.</td>
+            <td><strong style="color:var(--danger);">Dùng AI đóng vai người dùng phỏng vấn ➔ C7 = 0 điểm cả nhóm.</strong></td>
+          </tr>
+          <tr>
+            <td><strong>CP5–6 PS &amp; Quyết định</strong></td>
+            <td><span class="badge-pill badge-teal">CHỈ PHẢN BIỆN</span></td>
+            <td>Prompt: <em>"Chỉ ra lỗ hổng và rủi ro, đừng viết lại thay tôi"</em>. Nhóm tự quyết.</td>
+            <td>Nhờ AI tự ra quyết định Go/No-Go hoặc tự sinh ngưỡng dừng.</td>
+          </tr>
+          <tr>
+            <td><strong>CP7 Reflection</strong></td>
+            <td><span class="badge-pill badge-rose">TUYỆT ĐỐI KHÔNG</span></td>
+            <td>Tự tay viết cảm nhận thật &gt;200 từ về vai trò, sự đổi ý và bài học rút ra.</td>
+            <td><strong style="color:var(--danger);">Reflection do AI viết thay ➔ C4 = 0 điểm.</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="slide-card ok-border" style="background:#f0fdf4;">
+        <div class="card-body" style="font-size: 0.88rem; color: #166534;">
+          <strong>💡 Nguyên tắc cốt lõi:</strong> Điểm số nằm ở <em>chất lượng lập luận và tính chân thực của bằng chứng</em>. Một phỏng vấn với 2 bạn cùng trường chỉ ra điểm bất cập còn quý giá gấp vạn lần số liệu ảo sinh từ ChatGPT!
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Nhấn mạnh với lớp:</strong>
+        <ul>
+          <li>Giảng viên công bố chế tài: Nếu phát hiện phỏng vấn AI đóng vai (persona prompting), điểm C7 của toàn bộ nhóm bị tính 0 điểm ngay lập tức.</li>
+          <li>Reflection cá nhân ở CP7 phải do sinh viên tự gõ. Giảng viên sẽ hỏi vấn đáp ngẫu nhiên chuỗi 6 mắt xích để kiểm tra mức độ hiểu bài.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: CP0 — Đọc bài mẫu -->
+    <section class="slide" data-index="6" data-active-cp="0" data-timer-min="15" data-timer-label="CP0: Đọc bài mẫu">
+      <div class="slide-subtitle">Checkpoint 0 · 15 Phút · Cá nhân</div>
+      <h2 class="slide-title">CP0 — Đọc bài mẫu (Deliverable Example)</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 15 Phút</span>
+        <span class="badge-pill badge-teal">👤 Ai làm: Cá nhân</span>
+        <span class="badge-pill badge-sky">📄 Nguồn: docs/02-deliverable-example.md</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: Không nộp file — Định hình chuẩn mực</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">Nhiệm vụ cần làm trong 15 phút</div>
+            <div class="card-body">
+              <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                <li>Mở file <code>docs/02-deliverable-example.md</code> để quan sát bài làm hoàn chỉnh.</li>
+                <li>Nếu không kịp đọc hết, đọc kỹ <strong>phần nhóm mục 2, 3, 7 và 8</strong>.</li>
+                <li>Quan sát cách nhóm mẫu hội tụ từ 12 candidate về 1 bằng Opportunity Solution Tree.</li>
+                <li>Xem cách kết quả research giải pháp có sẵn khiến nhóm đổi kết luận từ <em>"tự xây"</em> sang <em>"dùng công cụ có sẵn + quy trình bán thủ công"</em>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Nhìn đầu ra trước:</strong> Nắm vững tiêu chuẩn của bài làm tốt trước khi bắt đầu hành trình scan mở rộng.</li>
+              <li><strong>Problem Statement chỉ sau CP4 + CP5:</strong> Đừng vội viết Problem Statement khi chưa có bằng chứng kiểm chứng và chưa vẽ quy trình.</li>
+              <li><strong>“Go phạm vi nhỏ” ≠ tự xây agent:</strong> Quyết định sáng suốt là chọn giải pháp rẻ nhất, an toàn nhất để giải quyết triệt để bottleneck.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Đọc lướt qua loa mà không chú ý tại sao nhóm mẫu đổi kết luận.</li>
+              <li>Ngộ nhận rằng bài lab bắt buộc phải kết luận "xây dựng multi-agent phức tạp".</li>
+              <li>Tự viết Problem Statement ngay từ CP0 khi chưa hề scan hay kiểm chứng.</li>
+            </ul>
+          </div>
+
+          <div class="slide-card ok-border">
+            <div class="card-title">✅ Tự kiểm tra (Self-check CP0)</div>
+            <div class="card-body" style="font-size: 0.88rem;">
+              Bạn có thể giải thích trong <strong>1 câu</strong> vì sao nhóm mẫu quyết định <em>"Go phạm vi nhỏ"</em> mà không tự xây agent riêng không?
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Gợi ý hướng dẫn CP0:</strong>
+        <ul>
+          <li>Nhắc học viên mở bài mẫu ngay trên GitHub hoặc VS Code.</li>
+          <li>Nhấn mạnh bài mẫu là thước đo chất lượng. Chỉ ra rằng sự khác nhau giữa PS v0 và PS v1 chính là bài học đắt giá nhất của buổi học hôm nay.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: CP1 — Scan 5+ problems -->
+    <section class="slide" data-index="7" data-active-cp="1" data-timer-min="25" data-timer-label="CP1: Scan 5+ Problems">
+      <div class="slide-subtitle">Checkpoint 1 · 25 Phút · Cá nhân · Discover</div>
+      <h2 class="slide-title">CP1 — Scan 5+ Job Stories &amp; 4 Lăng kính</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 25 Phút</span>
+        <span class="badge-pill badge-teal">👤 Ai làm: Cá nhân</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/individual/MSSV_HoTen.md (Mục 2)</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: report/individual mục 2 — bảng ≥5 Job Stories + dấu hiệu thật</span>
+        <span class="badge-pill badge-emerald">🎁 Bonus B1: ≥10 problems đủ 4 lăng kính (+3đ)</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">Cú pháp Job Story chuẩn (Jobs-to-be-Done)</div>
+            <div class="card-body">
+              <pre class="code-block" style="background:#042f2e; color:#ccfbf1; font-weight:600;">Khi [tình huống cụ thể], tôi muốn [động cơ], để [kết quả mong muốn].</pre>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.5rem; font-size: 0.82rem;">
+                <div style="background:#fef2f2; padding:0.4rem 0.6rem; border-radius:6px; color:#991b1b;">
+                  ❌ <strong>Sai:</strong> Cần một chatbot hỗ trợ tài liệu môn học. (Chứa solution)
+                </div>
+                <div style="background:#f0fdf4; padding:0.4rem 0.6rem; border-radius:6px; color:#166534;">
+                  ✅ <strong>Đúng:</strong> Khi chuẩn bị nộp bài lúc 22h, tôi muốn biết bài còn thiếu mục nào, để không bị trừ điểm cấu trúc.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Mở rộng trước:</strong> Đừng vội lọc hay phán xét, hãy scan ít nhất 5 nỗi đau thật xung quanh việc học và làm việc của bạn.</li>
+              <li><strong>Job Story không solution:</strong> Tuyệt đối không có các từ <em>"cần AI / chatbot / app"</em> trong cột Job Story.</li>
+              <li><strong>Mỗi dòng ≥1 dấu hiệu đo được:</strong> Số phút mất, tần suất lặp lại trong tuần, số người chịu ảnh hưởng, log/tin nhắn chứng minh.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-2-border">
+            <div class="card-title">4 Lăng kính gợi mở (4 Lenses)</div>
+            <div class="card-body" style="font-size: 0.84rem;">
+              <ol style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li><strong>Lặp lại:</strong> Báo cáo tuần, nhập liệu, format form, trả lời câu hỏi giống nhau.</li>
+                <li><strong>Tốn thời gian:</strong> Đọc tài liệu dài, lục tìm quyết định cũ, review văn bản.</li>
+                <li><strong>Cần đọc, tổng hợp nhiều thông tin:</strong> Tóm tắt đa nguồn, so sánh, phân loại (mô tả cái khó, không nói cách giải).</li>
+                <li><strong>Pain từ người khác:</strong> Bạn bè hay phàn nàn điều gì? Ticket/email nào lặp lại?</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Viết solution trá hình (<em>"Cần chatbot..."</em> ➔ trừ 1đ/dòng).</li>
+              <li>Dấu hiệu chung chung không có số: <em>"mất nhiều thời gian"</em>, <em>"rất ức chế"</em>.</li>
+              <li>Để AI nghĩ hộ toàn bộ thay vì dựa trên nỗi đau thật của chính mình.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Hành động của Giảng viên trong CP1:</strong>
+        <ul>
+          <li>Đi soi từng màn hình sinh viên. Nhìn vào cột Job Story: hễ thấy chữ "AI", "tool", "chatbot" là yêu cầu sửa ngay thành động cơ và kết quả mong muốn.</li>
+          <li>Nhắc nhở học viên: Ai scan được từ 10 problems trở lên đủ 4 lăng kính và có số liệu thật sẽ được tính Bonus B1 (+3 điểm).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: CP2 — Top 3 Problem Cards -->
+    <section class="slide" data-index="8" data-active-cp="2" data-timer-min="35" data-timer-label="CP2: Top 3 Cards">
+      <div class="slide-subtitle">Checkpoint 2 · 35 Phút · Cá nhân · Discover</div>
+      <h2 class="slide-title">CP2 — Top 3 Cards &amp; Quy trình nháp có Bottleneck</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 35 Phút</span>
+        <span class="badge-pill badge-teal">👤 Ai làm: Cá nhân</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/individual/MSSV_HoTen.md (Mục 3)</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: 3 Cards + 3 Quy trình có số phút</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">Cấu trúc 1 Problem Card hoàn chỉnh</div>
+            <div class="card-body" style="font-size: 0.85rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                <div>• <strong>Job Story:</strong> Tình huống, động cơ, kết quả</div>
+                <div>• <strong>Actor:</strong> Ai là người chịu trận trực tiếp</div>
+                <div>• <strong>Quy trình:</strong> 3–7 bước con người đang làm</div>
+                <div>• <strong>Bottleneck:</strong> Bước nghẽn &amp; số phút mất</div>
+                <div>• <strong>Impact:</strong> Tác động tiêu cực đo được</div>
+                <div>• <strong>Success Metric:</strong> Chỉ số thành công</div>
+              </div>
+              <div style="margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed var(--line);">
+                • <strong>Phương án không dùng AI:</strong> Checklist / Quy trình / Rule xử lý thế nào?
+              </div>
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Bottleneck = một bước cụ thể + phút:</strong> Không nói chung chung "quy trình chậm". Phải chỉ đích danh bước nghẽn (ví dụ: Bước 3 đọc tổng hợp mất 60 phút).</li>
+              <li><strong>Đủ field card:</strong> Điền trọn vẹn mọi mục trong template của worksheet, không bỏ trống.</li>
+              <li><strong>AI = PM hoài nghi:</strong> Đưa card cho AI đóng vai "PM khó tính" phản biện và <em>bắt buộc ghi lại điểm đã sửa</em> (yêu cầu để đạt 10 điểm C2).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-2-border">
+            <div class="card-title">Mô hình Quy trình nháp (ASCII / Mermaid)</div>
+            <div class="card-body">
+              <pre class="code-block" style="font-size: 0.78rem;">
+[1. Nhận đề bài] (5') 
+    ➔ [2. Đọc tài liệu 40 trang] (90') ⚠️ BOTTLENECK
+    ➔ [3. Tóm tắt ý chính] (30') 
+    ➔ [4. Viết báo cáo] (20')</pre>
+              <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.35rem;">
+                Mỗi bước phải có ước lượng thời gian và đánh dấu chính xác bước nghẽn nặng nề nhất.
+              </div>
+            </div>
+          </div>
+
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Bottleneck ghi mơ hồ: <em>"Cả quy trình đều mất thời gian"</em> (trừ 1đ/card).</li>
+              <li>Quy trình không có số phút cho từng bước (trừ điểm C2).</li>
+              <li>Quên đưa cho AI phản biện hoặc không ghi chép nhóm đã sửa gì sau phản biện.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Lưu ý Giảng viên CP2:</strong>
+        <ul>
+          <li>Nhắc học viên: Bước nghẽn phải gắn với con số phút cụ thể. Nếu không có số phút, không thể tính toán được impact và ROI khi áp dụng giải pháp.</li>
+          <li>Gợi ý prompt cho AI làm PM hoài nghi: "Hãy đóng vai PM khó tính, chỉ ra 3 lỗ hổng lớn nhất trong Problem Card này khiến bài toán không đáng giải quyết".</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Bridge nghỉ / Chuyển Discover -> Define -->
+    <section class="slide" data-index="9" data-completed-through="2" data-timer-min="10" data-timer-label="Nghỉ giải lao">
+      <div class="slide-subtitle">Tạm nghỉ 10 phút · Chuyển giao pha</div>
+      <h2 class="slide-title">Nghỉ giải lao ☕ &amp; Chuyển giao Discover ➔ Define</h2>
+
+      <div class="card-grid grid-2" style="margin-bottom: 1.2rem;">
+        <div class="slide-card ok-border" style="background: #f0fdf4;">
+          <div class="card-title" style="color: var(--ok);">🎉 Hoàn thành pha Discover (Mở rộng)</div>
+          <div class="card-body" style="font-size: 0.9rem;">
+            Mỗi bạn đã có ít nhất 5 problem dạng Job Story và 3 Problem Cards chi tiết kèm quy trình nháp. Trong nhóm 3-4 bạn, hiện tại nhóm đang sở hữu <strong>9–12 problem candidates</strong> giàu tiềm năng!
+          </div>
+        </div>
+
+        <div class="slide-card accent-2-border" style="background: #f0f9ff;">
+          <div class="card-title" style="color: var(--accent-2);">🎯 Bước vào pha Define (Thu hẹp)</div>
+          <div class="card-body" style="font-size: 0.9rem;">
+            Ở CP3 tiếp theo, nhóm sẽ cùng hội tụ để chọn ra <strong>đúng 1 candidate problem</strong> bằng lập luận và chấm điểm chặt chẽ, không bỏ phiếu cảm tính.
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-card warn-border">
+        <div class="card-title" style="color: var(--warn);">📋 Việc cần làm trong 10 phút nghỉ này</div>
+        <div class="card-body" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; font-size: 0.88rem;">
+          <div>
+            <strong>1. Chọn 1 Card tốt nhất:</strong><br>
+            Tự chọn 1 card tâm đắc nhất của bạn để chuẩn bị pitch 1–2 phút cho cả nhóm.
+          </div>
+          <div>
+            <strong>2. Chuẩn bị 1 câu hỏi:</strong><br>
+            Viết sẵn 1 câu hỏi phản biện hóc búa để thử thách các thành viên khác trong nhóm.
+          </div>
+          <div>
+            <strong>3. Mở sẵn file nhóm:</strong><br>
+            Nhóm trưởng mở sẵn file <code>report/team/group_report.md</code> trên màn hình chung.
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Nghỉ giải lao 10 phút:</strong>
+        <ul>
+          <li>Cho học viên đứng dậy vận động nhẹ, uống nước.</li>
+          <li>Nhắc các nhóm di chuyển bàn ghế ngồi gần nhau để chuẩn bị bước vào phiên pitch trực tiếp CP3.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: CP3 — Hội tụ OST + Chấm điểm -->
+    <section class="slide" data-index="10" data-active-cp="3" data-timer-min="30" data-timer-label="CP3: Hội tụ nhóm">
+      <div class="slide-subtitle">Checkpoint 3 · 30 Phút · Nhóm · Define</div>
+      <h2 class="slide-title">CP3 — Hội tụ nhóm bằng Opportunity Solution Tree (OST)</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 30 Phút</span>
+        <span class="badge-pill badge-sky">👥 Ai làm: Nhóm 3–4</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/team/group_report.md (Mục 2)</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: Cây OST + Bảng chấm điểm 7 tiêu chí</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">Cấu trúc Opportunity Solution Tree rút gọn</div>
+            <div class="card-body" style="font-size: 0.84rem;">
+              <pre class="code-block" style="font-size: 0.78rem;">
+Outcome: Giảm 50% thời gian chuẩn bị trước mỗi buổi thuyết trình
+├── Opportunity 1 (Pain): Tốn 60' tìm kiếm số liệu cũ trong tin nhắn
+└── Opportunity 2 (Pain): Tốn 45' format slide theo đúng template trường
+    └── [Gạch bỏ mọi Solution như "Xây chatbot" đang đội lốt Opportunity!]</pre>
+              <div style="font-size: 0.82rem; color: var(--accent); font-weight: 700; margin-top: 0.35rem;">
+                Opportunity = Nhu cầu / Nỗi đau của user. Solution = Cách mình đáp ứng. Tuyệt đối không lẫn lộn!
+              </div>
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Không AI khi pitch:</strong> Mỗi bạn trình bày 1-2 phút bằng lời nói thật, đồng đội ghi câu hỏi chất vấn vào nhật ký phản biện.</li>
+              <li><strong>OST opportunity ≠ solution:</strong> Gốc cây là 1 Outcome chung, các nhánh chỉ là Pain/Opportunity, không bao giờ là tên tool/tính năng.</li>
+              <li><strong>Lý do loại ≥2 candidate:</strong> Bắt buộc giải thích lý do cụ thể vì sao loại các candidate khác (không bỏ phiếu suông).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-2-border">
+            <div class="card-title">Bảng chấm điểm 7 Tiêu chí (Thang 1–5)</div>
+            <div class="card-body" style="font-size: 0.83rem;">
+              Chấm cho shortlist 3 candidate tốt nhất:
+              <ol style="padding-left: 1.1rem; margin-top: 0.3rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                <li>Actor rõ ràng, tiếp cận được để phỏng vấn.</li>
+                <li>Quy trình hiện tại vẽ được chi tiết từng bước.</li>
+                <li>Bottleneck cụ thể, có số phút đo được.</li>
+                <li>Tác động lớn nếu giải quyết xong.</li>
+                <li>Vừa sức giải quyết trong khuôn khổ lab.</li>
+                <li>Có phương án cải tiến không cần dùng AI.</li>
+                <li>Cả nhóm cùng hào hứng giải quyết.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Nhánh cây OST ghi giải pháp: <em>"Web app / Chatbot tự động"</em>.</li>
+              <li>Bỏ phiếu chọn vội vàng không có bảng chấm điểm (tối đa 3đ C6).</li>
+              <li>Không ghi nhật ký phản biện của các thành viên.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Quan sát Giảng viên tại CP3:</strong>
+        <ul>
+          <li>Đi kiểm tra xem các nhóm có tranh luận không. Nếu nhóm chọn xong bài toán trong 3 phút, chắc chắn là bỏ phiếu cảm tính.</li>
+          <li>Chất vấn nhóm: "Tại sao nhóm em loại bài của bạn B?", "Nêu lý do vì sao bài toán được chọn lại có impact lớn hơn?".</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: CP4 — Mom Test + research (cấm bịa) -->
+    <section class="slide" data-index="11" data-active-cp="4" data-timer-min="30" data-timer-label="CP4: Kiểm chứng &amp; Research">
+      <div class="slide-subtitle">Checkpoint 4 · 30 Phút · Nhóm · Define</div>
+      <h2 class="slide-title">CP4 — Kiểm chứng The Mom Test &amp; Market Research (CẤM BỊA)</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 30 Phút</span>
+        <span class="badge-pill badge-sky">👥 Ai làm: Nhóm 3–4</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/team/group_report.md (Mục 3)</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: report/team/group_report.md mục 3 — assumption map, snapshot/survey, bảng research</span>
+        <span class="badge-pill badge-emerald">🎁 Bonus B2: ≥5 snapshots hoặc ≥20 survey (+4đ)</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">3 Quy tắc vàng của The Mom Test (Rob Fitzpatrick)</div>
+            <div class="card-body" style="font-size: 0.85rem;">
+              <ol style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li><strong>Hỏi về cuộc sống/công việc của họ:</strong> Không bao giờ hỏi về ý tưởng sản phẩm của mình.</li>
+                <li><strong>Hỏi về hành vi cụ thể đã xảy ra trong quá khứ:</strong> <em>"Lần gần nhất bạn làm việc này mất bao lâu? Bạn đã giải quyết thế nào?"</em>.</li>
+                <li><strong>Nói ít hơn người được hỏi:</strong> Lắng nghe nỗi đau thật, tuyệt đối không thuyết phục hay bán giải pháp.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Mom Test = hành vi đã xảy ra:</strong> Lời khen <em>"Ý tưởng hay đấy!"</em> không phải là bằng chứng. Hành vi và thời gian họ đã mất mới là bằng chứng.</li>
+              <li><strong>Có tín hiệu phản bác:</strong> Phải ghi lại ít nhất 1 ý kiến hoài nghi hoặc phản bác từ người được hỏi (giúp bài toán thực tế hơn).</li>
+              <li><strong>Research có link mở được &amp; CẤM BỊA:</strong> Tìm 2–3 giải pháp tương tự đã có trên thế giới. <em>Bịa phỏng vấn/survey ➔ C7 = 0 điểm cả nhóm!</em></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-2-border">
+            <div class="card-title">Interview Snapshot &amp; Nghiên cứu giải pháp</div>
+            <div class="card-body" style="font-size: 0.83rem;">
+              <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li>Phỏng vấn nhanh <strong>2–3 người thật</strong> (bạn học nhóm khác hoặc người ngoài). Không ghi họ tên PII, ghi theo vai trò (ví dụ: Sinh viên năm 2 VinUni).</li>
+                <li>Lập bảng Research: 2–3 công cụ/pattern đã giải bài toán tương tự. Ghi rõ link sống, họ giải quyết bước nào và còn bỏ trống bước nào.</li>
+                <li>Bắt buộc có phần: <strong>Nhóm đã sửa gì ở Problem sau khi kiểm chứng?</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Dùng ChatGPT đóng vai người dùng phỏng vấn (vi phạm liêm chính nặng).</li>
+              <li>Hỏi câu mớm cung: <em>"Bạn có muốn một công cụ tự động làm bài không?"</em>.</li>
+              <li>Link nghiên cứu chết hoặc số liệu không trích nguồn (trừ 2đ).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Giảng viên kiểm soát CP4:</strong>
+        <ul>
+          <li>Quan sát các nhóm đứng dậy đi phỏng vấn các nhóm khác trong phòng lab.</li>
+          <li>Nhắc nhở: Không được phỏng vấn thành viên trong chính nhóm mình.</li>
+          <li>Kiểm tra tính chân thực của link trong bảng Research. Nhóm phải tự mở link và kiểm chứng.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: CP5 — Before/After + PS v0 -->
+    <section class="slide" data-index="12" data-active-cp="5" data-timer-min="45" data-timer-label="CP5: Before/After &amp; PS v0">
+      <div class="slide-subtitle">Checkpoint 5 · 45 Phút · Nhóm · Define</div>
+      <h2 class="slide-title">CP5 — Quy trình Trước/Sau &amp; Problem Statement v0</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 45 Phút (Dài nhất)</span>
+        <span class="badge-pill badge-sky">👥 Ai làm: Nhóm 3–4</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/team/group_report.md (Mục 4–5)</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: Sơ đồ Trước/Sau + PS v0 đủ 6 trường</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">6 Trường bắt buộc của Problem Statement v0</div>
+            <div class="card-body" style="font-size: 0.83rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <div>1. <strong>Actor:</strong> Đối tượng chịu đau trực tiếp</div>
+              <div>2. <strong>Quy trình:</strong> Chuỗi các bước hiện tại</div>
+              <div>3. <strong>Bottleneck:</strong> Bước nghẽn (phút + tỷ lệ lỗi)</div>
+              <div>4. <strong>Impact:</strong> Thiệt hại đo được về thời gian/tiền</div>
+              <div>5. <strong>Success Metric:</strong> <em>Baseline + Target + Cách đo</em></div>
+              <div>6. <strong>Boundary:</strong> Giới hạn những gì giải pháp KHÔNG làm</div>
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Future flow có HITL + phương án quay về:</strong> Quy trình tương lai bắt buộc có bước người kiểm tra (Human-in-the-loop) và phương án dự phòng khi AI sai.</li>
+              <li><strong>Metric baseline / target / cách đo:</strong> Phải có số đo hiện tại, số đo kỳ vọng và công thức đo. <em>Cấm ghi định tính "tiện hơn, nhanh hơn"!</em></li>
+              <li><strong>Boundary rõ ràng:</strong> Định nghĩa đanh thép những ranh giới cấm vượt qua để bảo vệ dữ liệu và chất lượng.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-2-border">
+            <div class="card-title">Bảng so sánh Before / After (Quy trình)</div>
+            <div class="card-body" style="font-size: 0.83rem;">
+              <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li><strong>Quy trình hiện tại:</strong> Actor, Input, Output, Thời gian từng bước, đánh dấu Bottleneck.</li>
+                <li><strong>Quy trình tương lai:</strong> Bước nào Rule làm, bước nào AI hỗ trợ, bước nào con người kiểm tra (HITL).</li>
+                <li><strong>Bảng tổng hợp Before/After:</strong> Tổng thời gian, số bước thủ công, rủi ro mới phát sinh.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Quy trình tương lai giao 100% cho AI tự chạy không có người kiểm tra.</li>
+              <li>Thiếu phương án quay về khi hệ thống gặp sự cố (trừ 3đ C8).</li>
+              <li>Metric chung chung không đo lường được (trừ 5đ C9).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>CP5 - Trọng tâm của buổi học:</strong>
+        <ul>
+          <li>Nhắc nhở nhóm: Phải vẽ quy trình trước rồi mới viết Problem Statement v0.</li>
+          <li>Bắt buộc học viên viết rõ 3 thành phần của Metric: Baseline (hiện tại mất bao lâu?), Target (sau giải pháp còn bao lâu?), Cách đo (lấy log hay bấm giờ?).</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 13: CP6a — No AI / Rule / Workflow / Agent ladder -->
+    <section class="slide" data-index="13" data-active-cp="6" data-timer-min="25" data-timer-label="CP6: Mức AI &amp; Quyết định">
+      <div class="slide-subtitle">Checkpoint 6 (Phần 1) · 25 Phút · Nhóm · Define</div>
+      <h2 class="slide-title">CP6a — AI Intervention Ladder: Chọn mức tối giản đủ dùng</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 25 Phút (Cả 6a + 6b)</span>
+        <span class="badge-pill badge-sky">👥 Ai làm: Nhóm 3–4</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/team/group_report.md (Mục 6)</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: report/team/group_report.md mục 6 — ma trận, bảng 4 mức, AI Canvas, PAIR</span>
+        <span class="badge-pill badge-teal">🪜 Thang 4 mức can thiệp</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 95px;">Mức</th>
+                <th>Nghĩa &amp; Bản chất trong lab</th>
+                <th style="width: 140px;">Ví dụ áp dụng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge-pill badge-slate">No AI</span></td>
+                <td>Sửa quy trình / template / checklist / đào tạo con người</td>
+                <td>Chuẩn hóa form nộp bài, checklist kiểm tra</td>
+              </tr>
+              <tr>
+                <td><span class="badge-pill badge-teal">Rule</span></td>
+                <td>if/else, script Python, regex, tự động hóa không dùng AI</td>
+                <td>Script check tên file, validator dữ liệu</td>
+              </tr>
+              <tr>
+                <td><span class="badge-pill badge-sky">Workflow</span></td>
+                <td>Các bước định sẵn rõ ràng; AI chỉ làm một phần (tóm tắt/trích xuất)</td>
+                <td>AI tóm tắt 1 bước, người review và gửi mail</td>
+              </tr>
+              <tr>
+                <td><span class="badge-pill badge-amber">Agent</span></td>
+                <td>AI tự quyết bước tiếp theo, tự gọi công cụ và xử lý ngoại lệ</td>
+                <td>AI tự duyệt yêu cầu phức tạp không cần người</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Chọn mức đơn giản nhất đủ dùng:</strong> Chỉ lên Workflow khi Rule không đủ; chỉ lên Agent khi Workflow không giải quyết được.</li>
+              <li><strong>Giải thích vì sao không thấp hơn:</strong> Bắt buộc trả lời câu hỏi: <em>"Tại sao nhóm không chọn mức đơn giản hơn?"</em>.</li>
+              <li><strong>Đa số lab chỉ cần Rule hoặc Workflow:</strong> Đừng rơi vào bẫy sính công nghệ; giải pháp thực tế thường thành công nhờ Workflow bán tự động.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-2-border">
+            <div class="card-title">AI Canvas &amp; Câu hỏi Google PAIR</div>
+            <div class="card-body" style="font-size: 0.83rem;">
+              <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li><strong>AI Canvas rút gọn:</strong> AI dự đoán gì? Người cân nhắc gì? Hành động gì? Cần data đầu vào gì? Lấy feedback cải thiện ở đâu?</li>
+                <li><strong>Google PAIR Question 1:</strong> Người dùng muốn được hỗ trợ (Augment) hay giao hẳn việc (Automate)?</li>
+                <li><strong>Google PAIR Question 2:</strong> AI sai kiểu nào tệ hơn: Báo nhầm (False Positive) hay Bỏ sót (False Negative)?</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Chọn ngay Agent "cho ngầu" mà không giải thích vì sao Workflow không đủ (tối đa 3đ C10).</li>
+              <li>Bỏ qua phương án Rule/No AI khi bài toán hoàn toàn xử lý được bằng logic if/else.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Khái niệm then chốt CP6a:</strong>
+        <ul>
+          <li>Nhấn mạnh bài học từ Anthropic: Workflow có độ kiểm soát và tin cậy cao hơn nhiều so với Autonomous Agent.</li>
+          <li>Nếu nhóm chọn No AI hoặc Rule: Nhóm không cần điền AI Canvas và câu hỏi PAIR, chấm điểm dựa trên lập luận vì sao mức đó là tối ưu nhất.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 14: CP6b — PS v1 + 4 risks + Go/Not Yet/No-Go -->
+    <section class="slide" data-index="14" data-active-cp="6" data-timer-min="25" data-timer-label="CP6: Mức AI &amp; Quyết định">
+      <div class="slide-subtitle">Checkpoint 6 (Phần 2) · 25 Phút · Nhóm · Define</div>
+      <h2 class="slide-title">CP6b — PS v1, 4 Rủi ro &amp; Quyết định Go / Not Yet / No-Go</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: Hoàn tất CP6</span>
+        <span class="badge-pill badge-sky">👥 Ai làm: Nhóm 3–4</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/team/group_report.md (Mục 7–8)</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: report/team/group_report.md mục 7–8 — PS v1 + 3–5 eval, 4 rủi ro, quyết định + ngưỡng dừng</span>
+        <span class="badge-pill badge-emerald">🎁 Bonus B3: Bộ Eval 10 cặp (+3đ)</span>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">4 Rủi ro đánh giá (Marty Cagan - Inspired)</div>
+            <div class="card-body" style="font-size: 0.83rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
+              <div>• <strong>Value Risk:</strong> Người dùng có thực sự cần và chịu dùng không?</div>
+              <div>• <strong>Usability Risk:</strong> Người dùng có hiểu và dễ thao tác không?</div>
+              <div>• <strong>Feasibility Risk:</strong> Công nghệ hiện tại có làm nổi trong tầm giá không?</div>
+              <div>• <strong>Viability Risk:</strong> Có vi phạm chính sách, đạo đức, bảo mật không?</div>
+            </div>
+            <div style="margin-top: 0.4rem; font-size: 0.8rem; color: var(--accent); font-weight: 700;">
+              Mỗi rủi ro phải xếp mức: Thấp (an toàn) / Trung bình / Cao (nguy hiểm) kèm lý do.
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>4 rủi ro có mức + lý do:</strong> Phân tích thấu đáo từng rủi ro trước khi đặt bút ký quyết định.</li>
+              <li><strong>Quyết định + ngưỡng dừng:</strong> Dù chọn Go hay Not Yet, <em>bắt buộc phải có ngưỡng dừng đo được</em> ("Nếu sau X tuần mà Y thì dừng/quay về Z").</li>
+              <li><strong>v1 khác v0 có lý do:</strong> PS v1 bổ sung AI intervention point, mức can thiệp, rủi ro mới và người kiểm tra.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-2-border">
+            <div class="card-title">3 Lựa chọn Quyết định &amp; Ngưỡng dừng</div>
+            <div class="card-body" style="font-size: 0.83rem;">
+              <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li><strong style="color:var(--ok);">🟢 GO:</strong> Làm thử nghiệm nhỏ (pilot) có kiểm soát chặt chẽ.</li>
+                <li><strong style="color:var(--warn);">🟡 NOT YET:</strong> Cần thu thập thêm dữ liệu hoặc phỏng vấn thêm trước khi triển khai.</li>
+                <li><strong style="color:var(--danger);">🔴 NO-GO:</strong> Dừng lại, quay về tối ưu quy trình No AI / Rule hoặc hủy bài toán.</li>
+              </ul>
+              <div style="margin-top: 0.4rem; padding: 0.4rem 0.6rem; background: #fefce8; border-radius: 6px; font-weight: 600; color: #854d0e;">
+                Ví dụ ngưỡng dừng: "Nếu sau 2 tuần chạy thử, tỷ lệ người dùng phải sửa lại đầu ra của AI &gt; 25% thì lập tức quay về quy trình thủ công".
+              </div>
+            </div>
+          </div>
+
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Ra quyết định Go nhưng không có ngưỡng dừng (trừ 2đ C11).</li>
+              <li>Đánh giá 4 rủi ro hời hợt: tất cả đều ghi "Thấp" mà không có bằng chứng.</li>
+              <li>PS v1 copy y nguyên PS v0 mà không hề bổ sung điểm can thiệp AI và eval.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Lưu ý Giảng viên CP6b:</strong>
+        <ul>
+          <li>Nhắc học viên: Thiếu ngưỡng dừng (stop threshold) sẽ bị trừ 2 điểm ở tiêu chí C11.</li>
+          <li>Khen ngợi nhóm dám ra quyết định No-Go nếu họ chỉ ra Feasibility hoặc Viability quá rủi ro.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 15: CP7 — Reflection + chuỗi 6 mắt xích -->
+    <section class="slide" data-index="15" data-active-cp="7" data-timer-min="15" data-timer-label="CP7: Reflection cá nhân">
+      <div class="slide-subtitle">Checkpoint 7 · 15 Phút · Cá nhân · Đóng gói</div>
+      <h2 class="slide-title">CP7 — Reflection cá nhân &amp; Chuỗi 6 Mắt xích</h2>
+
+      <div class="cp-meta-bar">
+        <span class="badge-pill badge-slate">⏱️ Timebox: 15 Phút</span>
+        <span class="badge-pill badge-teal">👤 Ai làm: Cá nhân</span>
+        <span class="badge-pill badge-sky">📄 Ghi vào: report/individual/MSSV_HoTen.md (Mục 4–6) &amp; TEAM.md</span>
+        <span class="badge-pill badge-amber">📦 Sản phẩm: report/individual mục 4–6 reflection + chuỗi 6 mắt xích, TEAM.md</span>
+        <span class="badge-pill badge-rose">⚠️ Cấm AI viết hộ</span>
+      </div>
+
+      <div class="slide-card accent-border" style="margin-bottom: 1rem; background: #042f2e; color: #ccfbf1;">
+        <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 0.35rem; color: #5eead4;">
+          🔗 CHUỖI 6 MẮT XÍCH CỐT LÕI (BẠN PHẢI TỰ GIẢI THÍCH ĐƯỢC KHI COACH HỎI):
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.92rem; font-weight: 700;">
+          Problem ──▶ Quy trình ──▶ Metric ──▶ Boundary ──▶ Mức can thiệp AI ──▶ Quyết định
+        </div>
+      </div>
+
+      <div class="cp-layout-grid">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="slide-card accent-border">
+            <div class="card-title">Nội dung báo cáo cá nhân cần hoàn tất</div>
+            <div class="card-body" style="font-size: 0.84rem;">
+              <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li><strong>Mục 4:</strong> Bảng nhật ký tham gia ("Tôi đã đóng góp gì trong nhóm?").</li>
+                <li><strong>Mục 5:</strong> Bảng dùng AI (Dùng làm gì, AI giúp gì, AI sai gì, bạn sửa gì).</li>
+                <li><strong>Mục 6:</strong> Câu hỏi mở tự soi chiếu (Tối thiểu <strong>200 từ</strong> viết bằng trải nghiệm thật của chính bạn).</li>
+                <li><strong>TEAM.md:</strong> Tự điền phần cam kết cá nhân trên repo chung.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="coach-box">
+            <div class="coach-box-title">💡 Coach nói gì (Faithful Guidance)</div>
+            <ul class="coach-bullets">
+              <li><strong>Reflection tự viết:</strong> Tuyệt đối không dùng AI viết thay. <em>Nếu AI viết ➔ C4 = 0 điểm ngay lập tức!</em></li>
+              <li><strong>Ví dụ đổi ý / AI sai đã sửa:</strong> Nêu rõ ít nhất 1 lần bạn đổi ý do phản biện và 1 lần AI gợi ý ngô nghê mà bạn đã sửa lại.</li>
+              <li><strong>Giải thích được chuỗi 6 mắt xích:</strong> Coach có thể phỏng vấn ngẫu nhiên bất kỳ bạn nào để chấm tiêu chí C5 (6 điểm).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div class="anti-box">
+            <div class="anti-box-title">⚠️ Anti-pattern thường gặp</div>
+            <ul class="anti-bullets">
+              <li>Reflection viết chung chung dưới 200 từ (tối đa 4đ C4).</li>
+              <li>Quên không điền phần của mình trong file <code>TEAM.md</code> chung.</li>
+              <li>Không giải thích được mắt xích từ Metric sang Boundary khi coach hỏi trực tiếp.</li>
+            </ul>
+          </div>
+
+          <div class="slide-card ok-border">
+            <div class="card-title">🎯 Tiêu chí C5 (Hiểu bài - 6 điểm)</div>
+            <div class="card-body" style="font-size: 0.84rem;">
+              Tự tin giải thích trôi chảy bài toán của nhóm theo chuỗi 6 mắt xích trong vòng 60 giây mà không cần nhìn vào tài liệu.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Hành động của Giảng viên tại CP7:</strong>
+        <ul>
+          <li>Đi chọn ngẫu nhiên 2-3 sinh viên ở các bàn khác nhau và hỏi: "Giải thích chuỗi 6 mắt xích của bài toán nhóm em trong 1 phút?".</li>
+          <li>Chấm trực tiếp tiêu chí C5 (6 điểm cá nhân) dựa trên câu trả lời này.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 16: Rubric 40+60 + bonus + trừ điểm nặng -->
+    <section class="slide" data-index="16">
+      <div class="slide-subtitle">Thang điểm &amp; Tiêu chí đánh giá</div>
+      <h2 class="slide-title">Rubric: 40 Cá nhân + 60 Nhóm = 100 Điểm (Bonus ≤ 10)</h2>
+
+      <div class="card-grid grid-2" style="margin-bottom: 1rem;">
+        <div class="slide-card accent-border">
+          <div class="card-title">CÁ NHÂN — 40 ĐIỂM (File MSSV_HoTen.md)</div>
+          <div class="card-body" style="font-size: 0.83rem;">
+            <table class="data-table">
+              <tr><td><strong>C1 Scan problem (CP1)</strong></td><td><strong>8đ</strong></td><td>≥5 Job Stories, có dấu hiệu thật đo được</td></tr>
+              <tr><td><strong>C2 Top 3 cards (CP2)</strong></td><td><strong>10đ</strong></td><td>Đủ field, quy trình có phút + sửa theo AI</td></tr>
+              <tr><td><strong>C3 Nhật ký phản biện (CP3)</strong></td><td><strong>6đ</strong></td><td>Ghi câu hỏi đặt cho bạn &amp; câu hỏi nhận được</td></tr>
+              <tr><td><strong>C4 Reflection (CP7)</strong></td><td><strong>10đ</strong></td><td>Nêu rõ vai trò, ví dụ đổi ý, tự viết ≥200 từ</td></tr>
+              <tr><td><strong>C5 Hiểu bài (CP7)</strong></td><td><strong>6đ</strong></td><td>Giải thích chuẩn chuỗi 6 mắt xích</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="slide-card accent-2-border">
+          <div class="card-title">NHÓM — 60 ĐIỂM (File group_report.md)</div>
+          <div class="card-body" style="font-size: 0.83rem;">
+            <table class="data-table">
+              <tr><td><strong>C6 Hội tụ OST (CP3)</strong></td><td><strong>8đ</strong></td><td>Cây OST tách đúng pain/solution, lý do loại</td></tr>
+              <tr><td><strong>C7 Kiểm chứng (CP4)</strong></td><td><strong>10đ</strong></td><td>Mom Test thật, có phản bác, link sống</td></tr>
+              <tr><td><strong>C8 Quy trình (CP5)</strong></td><td><strong>12đ</strong></td><td>Before/After, có HITL, fallback, thời gian</td></tr>
+              <tr><td><strong>C9 PS v0 ➔ v1 (CP5,6)</strong></td><td><strong>15đ</strong></td><td>Metric đo được, boundary, 3-5 eval criteria</td></tr>
+              <tr><td><strong>C10 Mức can thiệp (CP6)</strong></td><td><strong>8đ</strong></td><td>Lập luận vì sao không chọn mức thấp hơn</td></tr>
+              <tr><td><strong>C11 Quyết định (CP6)</strong></td><td><strong>7đ</strong></td><td>4 rủi ro, quyết định kèm ngưỡng dừng</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-card danger-border">
+        <div class="card-title" style="color: var(--danger); font-size: 0.95rem;">
+          🚫 BẢNG TỔNG HỢP CÁC LỖI TRỪ ĐIỂM NẶNG &amp; ĐIỂM LIÊM CHÍNH
+        </div>
+        <div class="card-body" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; font-size: 0.81rem; color: #991b1b;">
+          <div>
+            • <strong>Sai tên repo hoặc sai tên file:</strong> Trừ 5 điểm trực tiếp.<br>
+            • <strong>Bịa interview / survey:</strong> C7 = 0 điểm cả nhóm.
+          </div>
+          <div>
+            • <strong>Thiếu group_report.md hoặc TEAM.md:</strong> Phần nhóm = 0 điểm.<br>
+            • <strong>Không có đóng góp trong TEAM.md:</strong> Cá nhân đó bị 0 điểm nhóm.
+          </div>
+          <div>
+            • <strong>Reflection do AI viết thay:</strong> C4 = 0 điểm.<br>
+            • <strong>Lộ API key / mật khẩu / PII cá nhân:</strong> Trừ 5 điểm.
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Lưu ý Giảng viên về Rubric:</strong>
+        <ul>
+          <li>Nhắc nhở học viên: Bonus tối đa 10 điểm (B1 scan rộng +3, B2 kiểm chứng sâu +4, B3 bộ eval mẫu +3).</li>
+          <li>Điểm bonus chỉ cộng nếu bài lab đạt chất lượng tốt, không tính vào các hoạt động giơ tay hay pitching.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SLIDE 17: Checklist nộp bài & Kickoff CTA -->
+    <section class="slide" data-index="17">
+      <div class="slide-subtitle">Sẵn sàng về đích · Kiểm tra lần cuối</div>
+      <h2 class="slide-title">Checklist Nộp bài &amp; Khởi động Lab</h2>
+
+      <div class="card-grid grid-2" style="margin-bottom: 1.2rem;">
+        <div class="slide-card ok-border">
+          <div class="card-title">✅ Checklist trước khi rời phòng lab</div>
+          <div class="card-body" style="font-size: 0.84rem;">
+            <ul style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem;">
+              <li>[ ] Tên repo fork đúng chuẩn: <code>K5-&lt;L3A/L3B&gt;-DAY02-HoVaTen-MSSV-DiscoveryProblemFraming</code>.</li>
+              <li>[ ] Đã xóa template <code>MSSV_HoTen.md</code> sau khi mọi người đã có file riêng.</li>
+              <li>[ ] File cá nhân của bạn có đủ scan ≥5 problem (CP1) và 3 cards (CP2).</li>
+              <li>[ ] File <code>group_report.md</code> đã hoàn thiện đầy đủ CP3 đến CP6.</li>
+              <li>[ ] Tự khai đầy đủ phần đóng góp cá nhân trong <code>TEAM.md</code>.</li>
+              <li>[ ] <strong>Mỗi thành viên tự nộp link repo nhóm lên LMS bằng tài khoản riêng.</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-card warn-border">
+          <div class="card-title">⏰ Hạn chót nộp bài (Deadlines GMT+7)</div>
+          <div class="card-body" style="font-size: 0.85rem;">
+            <p style="margin-bottom: 0.6rem;">
+              ☀️ <strong>Lab sáng:</strong> Nộp trước <strong>23h59 GMT+7</strong> ngày hôm nay.<br>
+              🌙 <strong>Lab chiều / tối:</strong> Nộp trước <strong>11h59 GMT+7</strong> ngày hôm sau.
+            </p>
+            <div style="background: #fffbeb; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #fde68a; color: #92400e; font-size: 0.8rem;">
+              ⚠️ Chấm theo commit cuối cùng trước deadline. Không có hình thức trừ điểm nộp muộn (commit trễ = không chấm).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 0.5rem;">
+        <button class="btn-kickoff" onclick="kickoffLab()">
+          🚀 Bắt đầu CP0: Đọc bài mẫu (15 Phút) ➔
+        </button>
+        <div style="margin-top: 0.6rem; font-size: 0.82rem; color: var(--text-muted);">
+          Bấm nút trên để nhảy trực tiếp tới CP0 và tự động kích hoạt đồng hồ đếm ngược!
+        </div>
+      </div>
+
+      <div class="speaker-notes" style="display:none;">
+        <strong>Lời dặn kết thúc của Giảng viên:</strong>
+        <ul>
+          <li>Bấm nút Kickoff để bắt đầu đồng hồ CP0.</li>
+          <li>Chúc các nhóm làm việc tập trung, tranh luận sôi nổi và tìm ra bài toán thực sự giá trị!</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Persistent Deck Footer -->
+  <footer class="deck-footer">
+    <div class="slide-counter" id="slide-counter">1 / 18</div>
+
+    <!-- Progress clickable dots -->
+    <div class="progress-dots" id="dots-container" aria-label="Progress Dots"></div>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+      <button class="btn-nav" id="btn-prev" onclick="prevSlide()" title="Slide trước (Phím ←)">← Trước</button>
+      <button class="btn-nav" id="btn-next" onclick="nextSlide()" title="Slide tiếp (Phím → / Space)">Tiếp →</button>
+    </div>
+  </footer>
+
+  <!-- Speaker Notes Drawer -->
+  <aside id="speaker-notes-drawer" aria-label="Speaker Notes">
+    <div class="notes-header">
+      <span class="notes-title">📝 Ghi chú Giảng viên (Speaker Notes)</span>
+      <button class="notes-close" onclick="toggleSpeakerNotes()" title="Đóng ghi chú (Phím N)">×</button>
+    </div>
+    <div class="notes-content" id="notes-content">
+      Không có ghi chú cho slide này.
+    </div>
+  </aside>
+
+  <!-- Deck Scripts -->
+  <script>
+    // State
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const totalSlides = slides.length;
+    let currentIndex = 0;
+
+    // DOM Elements
+    const counterEl = document.getElementById("slide-counter");
+    const dotsContainer = document.getElementById("dots-container");
+    const prevBtn = document.getElementById("btn-prev");
+    const nextBtn = document.getElementById("btn-next");
+    const timerDisplayEl = document.getElementById("timer-display");
+    const timerLabelEl = document.getElementById("timer-label");
+    const timerStatusEl = document.getElementById("timer-status");
+    const timerPanelEl = document.getElementById("timer-panel");
+    const railNodes = Array.from(document.querySelectorAll(".cp-node"));
+    const notesDrawer = document.getElementById("speaker-notes-drawer");
+    const notesContent = document.getElementById("notes-content");
+    const soundToggleBtn = document.getElementById("btn-sound-toggle");
+    const soundIconEl = document.getElementById("sound-icon");
+    const musicToggleBtn = document.getElementById("btn-music-toggle");
+    const musicIconEl = document.getElementById("music-icon");
+
+    // Audio State (Default Muted as per plan)
+    let isMuted = true;
+    try {
+      const storedMuted = localStorage.getItem("deck_sound_muted");
+      if (storedMuted === "false") {
+        isMuted = false;
+      }
+    } catch (e) {
+      isMuted = true;
+    }
+    let audioCtx = null;
+
+    function ensureAudio() {
+      try {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtxClass) return null;
+        if (!audioCtx) audioCtx = new AudioCtxClass();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      } catch (e) {
+        console.warn("Audio Context init warning:", e);
+        return null;
+      }
+    }
+
+    function updateSoundUI() {
+      if (!soundToggleBtn || !soundIconEl) return;
+      if (isMuted) {
+        soundIconEl.textContent = "🔇";
+        soundToggleBtn.classList.remove("active");
+        soundToggleBtn.title = "Bật hiệu ứng âm thanh (Phím M)";
+      } else {
+        soundIconEl.textContent = "🔊";
+        soundToggleBtn.classList.add("active");
+        soundToggleBtn.title = "Tắt hiệu ứng âm thanh (Phím M)";
+      }
+    }
+    updateSoundUI();
+
+    function toggleMute() {
+      ensureAudio();
+      isMuted = !isMuted;
+      try {
+        localStorage.setItem("deck_sound_muted", isMuted ? "true" : "false");
+      } catch (e) {
+        // Ignore storage write error
+      }
+      updateSoundUI();
+      if (!isMuted) {
+        playSlideWhoosh();
+      }
+    }
+
+    // SFX Engine
+    function playSfx(type) {
+      if (isMuted) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const ctx = ensureAudio();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      try {
+        switch (type) {
+          case 'whoosh': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(260, now);
+            osc.frequency.exponentialRampToValueAtTime(540, now + 0.04);
+            osc.frequency.exponentialRampToValueAtTime(200, now + 0.14);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.08, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.15);
+            break;
+          }
+          case 'chime': {
+            [523.25, 783.99].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              const startTime = now + idx * 0.09;
+              osc.type = "triangle";
+              osc.frequency.setValueAtTime(freq, startTime);
+              gain.gain.setValueAtTime(0.001, startTime);
+              gain.gain.linearRampToValueAtTime(0.06, startTime + 0.02);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(startTime);
+              osc.stop(startTime + 0.36);
+            });
+            break;
+          }
+          case 'warn': {
+            [660, 660].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              const startTime = now + idx * 0.12;
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(freq, startTime);
+              gain.gain.setValueAtTime(0.001, startTime);
+              gain.gain.linearRampToValueAtTime(0.045, startTime + 0.015);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.1);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(startTime);
+              osc.stop(startTime + 0.11);
+            });
+            break;
+          }
+          case 'alarm': {
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              const startTime = now + idx * 0.1;
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(freq, startTime);
+              gain.gain.setValueAtTime(0.001, startTime);
+              gain.gain.linearRampToValueAtTime(0.07, startTime + 0.02);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.55);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(startTime);
+              osc.stop(startTime + 0.56);
+            });
+            break;
+          }
+          case 'kickoff': {
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              const startTime = now + idx * 0.06;
+              osc.type = "triangle";
+              osc.frequency.setValueAtTime(freq, startTime);
+              gain.gain.setValueAtTime(0.001, startTime);
+              gain.gain.linearRampToValueAtTime(0.08, startTime + 0.015);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(startTime);
+              osc.stop(startTime + 0.42);
+            });
+            break;
+          }
+          case 'tick': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(880, now);
+            osc.frequency.exponentialRampToValueAtTime(440, now + 0.03);
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.05, now + 0.005);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.04);
+            break;
+          }
+        }
+      } catch (err) {
+        console.warn("SFX error:", err);
+      }
+    }
+
+    function playSlideWhoosh() {
+      playSfx('whoosh');
+    }
+
+    // Ambient Music Synth Engine (engage bed)
+    let isMusicPlaying = false;
+    let ambientSynth = {
+      masterGain: null,
+      filter: null,
+      lfo: null,
+      lfoGain: null,
+      oscillators: [],
+      stepTimer: null,
+      fadeCleanupTimer: null,
+      generationId: 0,
+      notes: [293.66, 329.63, 369.99, 440.00, 493.88, 587.33, 659.25]
+    };
+
+    function updateMusicUI() {
+      if (!musicToggleBtn || !musicIconEl) return;
+      if (isMusicPlaying) {
+        musicIconEl.textContent = "🎶";
+        musicToggleBtn.classList.add("active");
+        musicToggleBtn.title = "Tắt nhạc nền Ambient (Phím B)";
+      } else {
+        musicIconEl.textContent = "🎵";
+        musicToggleBtn.classList.remove("active");
+        musicToggleBtn.title = "Bật nhạc nền Ambient (Phím B)";
+      }
+    }
+    updateMusicUI();
+
+    function scheduleNextMusicNote() {
+      if (!isMusicPlaying || !ambientSynth.masterGain || document.hidden) return;
+      const currentGen = ambientSynth.generationId;
+      try {
+        const ctx = audioCtx;
+        if (!ctx) return;
+        const noteTime = ctx.currentTime;
+        const noteOsc = ctx.createOscillator();
+        const noteGain = ctx.createGain();
+        const noteFilter = ctx.createBiquadFilter();
+
+        const noteFreq = ambientSynth.notes[Math.floor(Math.random() * ambientSynth.notes.length)];
+        noteOsc.type = "sine";
+        noteOsc.frequency.setValueAtTime(noteFreq, noteTime);
+
+        noteFilter.type = "lowpass";
+        noteFilter.frequency.setValueAtTime(600, noteTime);
+
+        noteGain.gain.setValueAtTime(0.0001, noteTime);
+        noteGain.gain.linearRampToValueAtTime(0.022, noteTime + 0.1);
+        noteGain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.2);
+
+        noteOsc.connect(noteFilter);
+        noteFilter.connect(noteGain);
+        noteGain.connect(ambientSynth.masterGain);
+
+        noteOsc.start(noteTime);
+        noteOsc.stop(noteTime + 2.3);
+      } catch (e) {}
+      const delay = 1800 + Math.random() * 1200;
+      ambientSynth.stepTimer = setTimeout(() => {
+        if (ambientSynth.generationId === currentGen && isMusicPlaying && !document.hidden) {
+          scheduleNextMusicNote();
+        }
+      }, delay);
+    }
+
+    function startMusic() {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const ctx = ensureAudio();
+      if (!ctx) return;
+
+      // Cancel any pending fade cleanup
+      if (ambientSynth.fadeCleanupTimer) {
+        clearTimeout(ambientSynth.fadeCleanupTimer);
+        ambientSynth.fadeCleanupTimer = null;
+      }
+
+      isMusicPlaying = true;
+      updateMusicUI();
+
+      // If resuming during fade-out
+      if (ambientSynth.masterGain) {
+        const now = ctx.currentTime;
+        ambientSynth.masterGain.gain.cancelScheduledValues(now);
+        ambientSynth.masterGain.gain.setValueAtTime(ambientSynth.masterGain.gain.value, now);
+        ambientSynth.masterGain.gain.linearRampToValueAtTime(0.04, now + 0.8);
+        if (ambientSynth.stepTimer === null && !document.hidden) {
+          scheduleNextMusicNote();
+        }
+        return;
+      }
+
+      ambientSynth.generationId++;
+      const currentGen = ambientSynth.generationId;
+
+      const now = ctx.currentTime;
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0.0001, now);
+      master.gain.linearRampToValueAtTime(0.04, now + 0.8);
+      master.connect(ctx.destination);
+      ambientSynth.masterGain = master;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(380, now);
+      filter.Q.setValueAtTime(1.2, now);
+      filter.connect(master);
+      ambientSynth.filter = filter;
+
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.type = "sine";
+      lfo.frequency.setValueAtTime(0.08, now);
+      lfoGain.gain.setValueAtTime(120, now);
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      lfo.start(now);
+      ambientSynth.lfo = lfo;
+      ambientSynth.lfoGain = lfoGain;
+
+      const freqs = [146.83, 220.00];
+      ambientSynth.oscillators = [];
+      freqs.forEach(f => {
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(f, now);
+        oscGain.gain.setValueAtTime(0.35, now);
+        osc.connect(oscGain);
+        oscGain.connect(filter);
+        osc.start(now);
+        ambientSynth.oscillators.push(osc);
+      });
+
+      if (!document.hidden) {
+        scheduleNextMusicNote();
+      }
+    }
+
+    function stopMusic() {
+      if (!isMusicPlaying && !ambientSynth.masterGain) return;
+      isMusicPlaying = false;
+      updateMusicUI();
+
+      if (ambientSynth.stepTimer) {
+        clearTimeout(ambientSynth.stepTimer);
+        ambientSynth.stepTimer = null;
+      }
+
+      if (ambientSynth.fadeCleanupTimer) {
+        clearTimeout(ambientSynth.fadeCleanupTimer);
+        ambientSynth.fadeCleanupTimer = null;
+      }
+
+      if (audioCtx && ambientSynth.masterGain) {
+        const now = audioCtx.currentTime;
+        ambientSynth.masterGain.gain.cancelScheduledValues(now);
+        ambientSynth.masterGain.gain.setValueAtTime(ambientSynth.masterGain.gain.value, now);
+        ambientSynth.masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.8);
+
+        const currentGen = ambientSynth.generationId;
+        ambientSynth.fadeCleanupTimer = setTimeout(() => {
+          if (!isMusicPlaying && ambientSynth.generationId === currentGen && ambientSynth.masterGain) {
+            try {
+              ambientSynth.oscillators.forEach(osc => osc.stop());
+              if (ambientSynth.lfo) ambientSynth.lfo.stop();
+            } catch (e) {}
+            ambientSynth.oscillators = [];
+            ambientSynth.lfo = null;
+            ambientSynth.lfoGain = null;
+            ambientSynth.filter = null;
+            ambientSynth.masterGain = null;
+          }
+          ambientSynth.fadeCleanupTimer = null;
+        }, 850);
+      }
+    }
+
+    function toggleMusic() {
+      if (isMusicPlaying) {
+        stopMusic();
+      } else {
+        startMusic();
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (!audioCtx || !ambientSynth.masterGain) return;
+      const now = audioCtx.currentTime;
+      if (document.hidden) {
+        if (ambientSynth.stepTimer) {
+          clearTimeout(ambientSynth.stepTimer);
+          ambientSynth.stepTimer = null;
+        }
+        if (isMusicPlaying) {
+          ambientSynth.masterGain.gain.cancelScheduledValues(now);
+          ambientSynth.masterGain.gain.setValueAtTime(ambientSynth.masterGain.gain.value, now);
+          ambientSynth.masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.5);
+        }
+      } else {
+        if (isMusicPlaying) {
+          ambientSynth.masterGain.gain.cancelScheduledValues(now);
+          ambientSynth.masterGain.gain.setValueAtTime(ambientSynth.masterGain.gain.value, now);
+          ambientSynth.masterGain.gain.linearRampToValueAtTime(0.04, now + 0.6);
+          if (ambientSynth.stepTimer === null) {
+            scheduleNextMusicNote();
+          }
+        }
+      }
+    });
+
+    if (window.matchMedia) {
+      const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      motionQuery.addEventListener('change', (e) => {
+        if (e.matches && isMusicPlaying) {
+          stopMusic();
+        }
+      });
+    }
+
+    // Timer State
+    let timerState = {
+      cp: null,
+      totalSec: 0,
+      remainSec: 0,
+      running: false,
+      intervalId: null,
+      label: ""
+    };
+    let autoPausedByNav = false;
+
+    function renderTimer() {
+      const isNeg = timerState.remainSec < 0;
+      const absSec = Math.abs(timerState.remainSec);
+      const m = Math.floor(absSec / 60);
+      const s = absSec % 60;
+      const sign = isNeg ? "-" : "";
+      timerDisplayEl.textContent = sign + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      timerLabelEl.textContent = timerState.label || "Lab Timer";
+
+      timerPanelEl.classList.remove("running", "paused", "overtime", "warn");
+      if (isNeg) {
+        timerPanelEl.classList.add("overtime");
+        timerStatusEl.textContent = "HẾT GIỜ";
+      } else if (timerState.running) {
+        timerPanelEl.classList.add("running");
+        timerStatusEl.textContent = "CHẠY";
+        if (timerState.remainSec <= 120 && timerState.remainSec > 0) {
+          timerPanelEl.classList.add("warn");
+        }
+      } else if (timerState.remainSec < timerState.totalSec && timerState.remainSec > 0) {
+        timerPanelEl.classList.add("paused");
+        timerStatusEl.textContent = "TẠM DỪNG";
+      } else {
+        timerStatusEl.textContent = "CHỜ";
+      }
+    }
+
+    function tick() {
+      timerState.remainSec--;
+      renderTimer();
+      if (timerState.remainSec === 120) {
+        playSfx('warn');
+      } else if (timerState.remainSec <= 90 && timerState.remainSec > 0 && timerState.remainSec % 30 === 0) {
+        playSfx('tick');
+      } else if (timerState.remainSec === 0) {
+        playSfx('alarm');
+      }
+    }
+
+    function startCpTimer(cp, minutes, label) {
+      if (timerState.intervalId) {
+        clearInterval(timerState.intervalId);
+        timerState.intervalId = null;
+      }
+      timerState.cp = cp;
+      timerState.totalSec = minutes * 60;
+      timerState.remainSec = minutes * 60;
+      timerState.label = label || ("CP" + cp);
+      timerState.running = true;
+      timerState.intervalId = setInterval(tick, 1000);
+      renderTimer();
+      playSfx('chime');
+    }
+
+    function pauseTimer(isNav) {
+      if (!isNav) autoPausedByNav = false;
+      if (timerState.running) {
+        if (timerState.intervalId) {
+          clearInterval(timerState.intervalId);
+          timerState.intervalId = null;
+        }
+        timerState.running = false;
+        renderTimer();
+      }
+    }
+
+    function resumeTimer() {
+      if (timerState.cp !== null && !timerState.running) {
+        if (timerState.intervalId) clearInterval(timerState.intervalId);
+        timerState.running = true;
+        timerState.intervalId = setInterval(tick, 1000);
+        renderTimer();
+      }
+    }
+
+    function resetTimer() {
+      if (timerState.cp !== null) {
+        timerState.remainSec = timerState.totalSec;
+        renderTimer();
+      }
+    }
+
+    function toggleTimer() {
+      autoPausedByNav = false;
+      if (timerState.running) {
+        pauseTimer(false);
+      } else {
+        resumeTimer();
+      }
+    }
+
+    // Dots Init
+    slides.forEach((_, idx) => {
+      const dot = document.createElement("div");
+      dot.className = "dot" + (idx === 0 ? " active" : "");
+      dot.title = "Tới slide " + (idx + 1);
+      dot.addEventListener("click", () => {
+        playSfx('tick');
+        goToSlide(idx);
+      });
+      dotsContainer.appendChild(dot);
+    });
+    const dots = Array.from(dotsContainer.querySelectorAll(".dot"));
+
+    // Rail Update
+    function updateRail(activeCp, completedThrough) {
+      railNodes.forEach(node => {
+        const cp = parseInt(node.getAttribute("data-cp"), 10);
+        node.classList.remove("active-rail", "completed-rail");
+        if (activeCp !== null && activeCp !== undefined) {
+          const currentCp = parseInt(activeCp, 10);
+          if (cp === currentCp) {
+            node.classList.add("active-rail");
+          } else if (cp < currentCp) {
+            node.classList.add("completed-rail");
+          }
+        } else if (completedThrough !== null && completedThrough !== undefined && !isNaN(completedThrough)) {
+          if (cp <= completedThrough) {
+            node.classList.add("completed-rail");
+          }
+        } else {
+          // After CP7 or on non-CP summary slides (slides >= 16)
+          if (currentIndex >= 16) {
+            node.classList.add("completed-rail");
+          } else if (currentIndex === 9) {
+            // Bridge / break between Discover and Define: mark CP0-CP2 as completed
+            if (cp <= 2) {
+              node.classList.add("completed-rail");
+            }
+          }
+        }
+      });
+    }
+
+    // Speaker Notes Update
+    function updateSpeakerNotes() {
+      const currentSlide = slides[currentIndex];
+      const noteEl = currentSlide.querySelector(".speaker-notes");
+      if (noteEl) {
+        notesContent.innerHTML = noteEl.innerHTML;
+      } else {
+        notesContent.innerHTML = "<em>Không có ghi chú cho slide này.</em>";
+      }
+    }
+
+    function toggleSpeakerNotes() {
+      notesDrawer.classList.toggle("open");
+    }
+
+    // Show slide
+    function show(index) {
+      if (index < 0) index = 0;
+      if (index >= totalSlides) index = totalSlides - 1;
+
+      const prevIndex = currentIndex;
+      currentIndex = index;
+
+      slides.forEach((s, i) => {
+        s.classList.toggle("active", i === currentIndex);
+      });
+
+      dots.forEach((d, i) => {
+        d.classList.toggle("active", i === currentIndex);
+      });
+
+      counterEl.textContent = (currentIndex + 1) + " / " + totalSlides;
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === totalSlides - 1;
+
+      // Update Rail
+      const currentSlide = slides[currentIndex];
+      const activeCp = currentSlide.getAttribute("data-active-cp");
+      const completedAttr = currentSlide.getAttribute("data-completed-through");
+      const completedThrough = completedAttr !== null ? parseInt(completedAttr, 10) : (currentIndex === 9 ? 2 : null);
+      updateRail(activeCp, completedThrough);
+
+      // Update Notes
+      updateSpeakerNotes();
+
+      // Sound Whoosh (if not initial render)
+      if (prevIndex !== currentIndex) {
+        playSlideWhoosh();
+      }
+
+      // Handle Timer Sync
+      const timerMinAttr = currentSlide.getAttribute("data-timer-min");
+      const timerLabelAttr = currentSlide.getAttribute("data-timer-label");
+
+      if (timerMinAttr !== null) {
+        const timerMinutes = parseInt(timerMinAttr, 10);
+        const slideCp = activeCp !== null ? String(activeCp) : "break";
+        if (slideCp !== timerState.cp) {
+          autoPausedByNav = false;
+          startCpTimer(slideCp, timerMinutes, timerLabelAttr);
+        } else if (autoPausedByNav) {
+          autoPausedByNav = false;
+          resumeTimer();
+        }
+      } else {
+        if (timerState.running) {
+          autoPausedByNav = true;
+          pauseTimer(true);
+        }
+      }
+    }
+
+    function nextSlide() {
+      if (currentIndex < totalSlides - 1) show(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) show(currentIndex - 1);
+    }
+
+    function goToSlide(index) {
+      show(index);
+    }
+
+    function goToCP(cpNum) {
+      playSfx('tick');
+      const targetIdx = slides.findIndex(s => s.getAttribute("data-active-cp") === String(cpNum));
+      if (targetIdx !== -1) {
+        show(targetIdx);
+      }
+    }
+
+    function kickoffLab() {
+      playSfx('kickoff');
+      const targetIdx = slides.findIndex(s => s.getAttribute("data-active-cp") === "0");
+      const idx = targetIdx !== -1 ? targetIdx : 6;
+      timerState.cp = null;
+      autoPausedByNav = false;
+      show(idx);
+      startCpTimer("0", 15, "CP0: Đọc bài mẫu");
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn("Fullscreen request error:", err);
+        });
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener("keydown", (e) => {
+      if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+      switch(e.key) {
+        case "ArrowRight":
+        case " ":
+        case "PageDown":
+          e.preventDefault();
+          nextSlide();
+          break;
+        case "ArrowLeft":
+        case "PageUp":
+          e.preventDefault();
+          prevSlide();
+          break;
+        case "Home":
+          e.preventDefault();
+          show(0);
+          break;
+        case "End":
+          e.preventDefault();
+          show(totalSlides - 1);
+          break;
+        case "p":
+        case "P":
+          e.preventDefault();
+          toggleTimer();
+          break;
+        case "r":
+        case "R":
+          e.preventDefault();
+          resetTimer();
+          break;
+        case "b":
+        case "B":
+          e.preventDefault();
+          toggleMusic();
+          break;
+        case "m":
+        case "M":
+          e.preventDefault();
+          toggleMute();
+          break;
+        case "n":
+        case "N":
+          e.preventDefault();
+          toggleSpeakerNotes();
+          break;
+        case "f":
+        case "F":
+          e.preventDefault();
+          toggleFullscreen();
+          break;
+      }
+    });
+
+    // Touch Swipe Support
+    let touchStartX = 0;
+    let touchStartY = 0;
+    window.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    window.addEventListener("touchend", (e) => {
+      const diffX = e.changedTouches[0].screenX - touchStartX;
+      const diffY = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX < 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }, { passive: true });
+
+    // Initial render
+    show(0);
+  </script>
+</body>
+</html>
