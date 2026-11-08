@@ -1,5 +1,5 @@
-# K5 Day 02 — Instructor Slides
+# K5 Day02 Instructor Slides (React + Three.js)
 
 Live: https://sagitakdx.github.io/k5-day02-instructor-slides/
 
-Source: local repo `k5-day02-instructor-slides` (Discovery & Problem Framing).
+Stack: Vite · React · Three.js (@react-three/fiber)
