@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tải thẻ sự cố</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root {
+  --paper: oklch(97.4% 0.007 255); --surface: oklch(99.3% 0.003 255); --sunk: oklch(94.6% 0.012 255);
+  --ink: oklch(24% 0.06 262); --ink-soft: oklch(40% 0.045 262); --ink-muted: oklch(50% 0.03 262);
+  --rule: oklch(86% 0.015 262); --navy: oklch(30% 0.1 262); --on-dark: oklch(98.5% 0.004 255);
+  --signal-ink: oklch(45% 0.17 27); --signal-tint: oklch(95.5% 0.025 27);
+  --ok: oklch(46% 0.11 155); --ok-tint: oklch(95.5% 0.03 155);
+  --code-bg: oklch(23% 0.045 262); --code-ink: oklch(93% 0.015 262);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: oklch(19% 0.03 262); --surface: oklch(23% 0.035 262); --sunk: oklch(17% 0.03 262);
+    --ink: oklch(94% 0.012 262); --ink-soft: oklch(82% 0.02 262); --ink-muted: oklch(70% 0.02 262);
+    --rule: oklch(34% 0.03 262); --navy: oklch(78% 0.09 262); --on-dark: oklch(19% 0.03 262);
+    --signal-ink: oklch(78% 0.13 27); --signal-tint: oklch(28% 0.06 27); --ok: oklch(75% 0.12 155); --ok-tint: oklch(27% 0.05 155);
+    --code-bg: oklch(15% 0.03 262); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: oklch(19% 0.03 262); --surface: oklch(23% 0.035 262); --sunk: oklch(17% 0.03 262);
+  --ink: oklch(94% 0.012 262); --ink-soft: oklch(82% 0.02 262); --ink-muted: oklch(70% 0.02 262);
+  --rule: oklch(34% 0.03 262); --navy: oklch(78% 0.09 262); --on-dark: oklch(19% 0.03 262);
+  --signal-ink: oklch(78% 0.13 27); --signal-tint: oklch(28% 0.06 27); --ok: oklch(75% 0.12 155); --ok-tint: oklch(27% 0.05 155);
+  --code-bg: oklch(15% 0.03 262); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.55; }
+main { max-width: 720px; margin: 0 auto; padding: 32px 16px 56px; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0 0 6px; letter-spacing: -0.02em; }
+.lede { color: var(--ink-soft); margin: 0 0 22px; }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; }
+label { display: block; font-weight: 600; margin-bottom: 6px; }
+input { width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 12px 14px; border-radius: 8px; border: 2px solid var(--rule); background: var(--paper); color: var(--ink); }
+input:focus { outline: none; border-color: var(--navy); }
+button { margin-top: 12px; width: 100%; font: inherit; font-weight: 700; font-size: 1.2rem; padding: 14px; border: 0; border-radius: 8px; background: var(--navy); color: var(--on-dark); cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: progress; }
+.msg { margin-top: 12px; padding: 10px 12px; border-radius: 8px; font-weight: 600; }
+.msg.err { background: var(--signal-tint); color: var(--signal-ink); }
+.msg.ok { background: var(--ok-tint); color: var(--ok); }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; }
+ol { padding-left: 1.3rem; margin: 0; }
+li { margin-bottom: 10px; }
+pre { margin: 6px 0 0; background: var(--code-bg); color: var(--code-ink); padding: 10px 12px; border-radius: 6px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 0.92em; }
+.note { color: var(--ink-muted); font-size: 0.95rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tải thẻ sự cố · Day 10</h1>
+  <p class="lede">Nhập mã nhóm trưởng nhận được lúc quay thẻ. Trang tải về gói gồm cả 8 thẻ. Nhóm chỉ làm đúng thẻ đã quay được.</p>
+
+  <section class="panel">
+    <label for="code">Mã tải thẻ</label>
+    <input id="code" placeholder="XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="16">
+    <button id="go">Tải thẻ</button>
+    <div id="msg" aria-live="polite"></div>
+  </section>
+
+  <h2>Sau khi tải</h2>
+  <ol>
+    <li>Chép file <code>the-su-co-day10.zip</code> vào <b>gốc repo của bàn</b> (thư mục có <code>README.md</code> và <code>lab10/</code>).</li>
+    <li>Giải nén tại chỗ. macOS hoặc Linux:
+      <pre>unzip -o the-su-co-day10.zip</pre>
+      Windows (PowerShell):
+      <pre>Expand-Archive -Force the-su-co-day10.zip .</pre>
+    </li>
+    <li>Kiểm: có thư mục <code>incidents/S1</code> … <code>incidents/S8</code>, và file <code>incident-cards.md</code> nằm cạnh <code>README.md</code>.</li>
+    <li>Ghi số thẻ đã quay vào dòng <code>Thẻ đã bốc:</code> ở đầu Phiếu C. Chạy lệnh 6 ngay, trước khi sửa gì (thay <code>Sx</code> bằng số thẻ):
+      <pre>python3 -m lab10.grade --incident Sx</pre>
+      Report phải có <code>1 integrity | ✅</code>. Nếu báo ❌, giải nén lại đúng gốc repo, hoặc gọi Lab Coach.</li>
+  </ol>
+  <p class="note">Không sửa file trong <code>incidents/</code>. Các file này có khóa hash.</p>
+</main>
+<script>
+(() => {
+  const ALPHA = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const $ = (id) => document.getElementById(id);
+  const ub64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const say = (kind, text) => { $('msg').innerHTML = text ? `<div class="msg ${kind}">${text}</div>` : ''; };
+
+  function clean(raw) {
+    return raw.toUpperCase().replace(/[^0-9A-Z]/g, '');
+  }
+  $('code').addEventListener('input', (e) => {
+    const s = clean(e.target.value).slice(0, 12);
+    e.target.value = s.match(/.{1,4}/g)?.join('-') ?? '';
+  });
+  $('code').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('go').click(); });
+
+  $('go').addEventListener('click', async () => {
+    const code = clean($('code').value);
+    if (code.length !== 12 || [...code].some((ch) => !ALPHA.includes(ch))) { say('err', 'Mã gồm 12 ký tự, dạng XXXX-XXXX-XXXX. Kiểm lại mã.'); return; }
+    $('go').disabled = true; say('', ''); $('go').textContent = 'Đang kiểm mã…';
+    try {
+      const keys = await (await fetch('keys.json', { cache: 'no-store' })).json();
+      const e = keys.entries[code.slice(0, 4)];
+      if (!e) throw new Error('bad');
+      const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
+      const kek = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: ub64(e.s), iterations: keys.iter },
+        base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      const rawK = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: ub64(e.i) }, kek, ub64(e.w));
+      $('go').textContent = 'Đang tải gói thẻ…';
+      const buf = new Uint8Array(await (await fetch('pack.enc', { cache: 'no-store' })).arrayBuffer());
+      const K = await crypto.subtle.importKey('raw', rawK, 'AES-GCM', false, ['decrypt']);
+      const zip = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.slice(0, 12) }, K, buf.slice(12));
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([zip], { type: 'application/zip' }));
+      a.download = keys.zip || 'the-su-co-day10.zip';
+      document.body.appendChild(a); a.click(); a.remove();
+      say('ok', 'Đã tải <code>the-su-co-day10.zip</code>. Làm tiếp các bước bên dưới.');
+    } catch (err) {
+      say('err', 'Mã không đúng. Kiểm lại từng ký tự, hoặc hỏi Lab Coach.');
+    } finally {
+      $('go').disabled = false; $('go').textContent = 'Tải thẻ';
+    }
+  });
+})();
+</script>
+</body>
+</html>
