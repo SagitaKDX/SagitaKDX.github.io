@@ -4,192 +4,235 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quay thẻ sự cố</title>
+<meta name="description" content="Lab Coach chiếu trang này lúc phát thẻ: nhóm trưởng gõ tên nhóm, quay, nhận thẻ sự cố, nhóm cặp và mã tải thẻ.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;400&family=Barlow:wght@300;400;600&display=swap">
 <style>
+/* Hallmark · shape: app screen · genre: atmospheric · theme: Darkroom (deal 1/3, seed projector-stage-tool-where-b78b·c38d9a49·2026-11-18·r0) · redesign: full
+ * nav: top bar, kept destinations none · signature: the reel under the amber marker, the winning plate developing · states: setup, idle, spinning, landed, all drawn, error · darkroom: amber, display Barlow Condensed (Sofia Sans Extra Condensed has no Vietnamese)
+ * axes: dark/display-condensed/chromatic-amber · posture: restrained · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V4 · weakest: E, the sheet and the table repeat the result; the table stays because coaches export it */
+/* Motion note: Darkroom keeps still, but the reel's motion is the tool's state (spinning, landed); transform only, and reduced motion lands at once */
+/* Hallmark · dropped #meta, #pair · replaced by #status and by #pairNo with #pairWith; no script reads the old ids */
+@import url("./tokens.css");
+@import url("./base.css");
+
 :root {
-  --paper: oklch(97.4% 0.007 255); --surface: oklch(99.3% 0.003 255); --sunk: oklch(94.6% 0.012 255);
-  --ink: oklch(24% 0.06 262); --ink-soft: oklch(40% 0.045 262); --ink-muted: oklch(50% 0.03 262);
-  --rule: oklch(86% 0.015 262); --navy: oklch(30% 0.1 262); --navy-tint: oklch(94% 0.025 262);
-  --signal: oklch(55% 0.2 27); --signal-ink: oklch(45% 0.17 27); --signal-tint: oklch(95.5% 0.025 27);
-  --ok: oklch(46% 0.11 155); --ok-tint: oklch(95.5% 0.03 155);
-  --warn-ink: oklch(45% 0.1 70); --warn-tint: oklch(95.5% 0.04 85);
-  --on-dark: oklch(98.5% 0.004 255);
-  --reel-bg: oklch(22% 0.045 262); --tile: oklch(30% 0.05 262); --tile-ink: oklch(96% 0.01 262);
-  /* card families */
-  --fam-tech: oklch(64% 0.15 250); --fam-ops: oklch(74% 0.15 75); --fam-biz: oklch(70% 0.16 140);
-  --fam-people: oklch(66% 0.17 320); --fam-legal: oklch(62% 0.2 27);
-  color-scheme: light;
+  --font-display: "Barlow Condensed", ui-sans-serif, sans-serif;
+  --text-figure: 9rem;
+  --text-plate: 4.5rem;
+  --text-code: 3rem;
+  --text-hero: 2.488rem;
+  --tile-w: 176px;
+  --tile-gap: 12px;
+  --reel-h: 248px;
+  --spin-dur: 6.4s;
+  --ease-reel: cubic-bezier(0.06, 0.72, 0.12, 1);
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: oklch(19% 0.03 262); --surface: oklch(23% 0.035 262); --sunk: oklch(17% 0.03 262);
-    --ink: oklch(94% 0.012 262); --ink-soft: oklch(82% 0.02 262); --ink-muted: oklch(70% 0.02 262);
-    --rule: oklch(34% 0.03 262); --navy: oklch(78% 0.09 262); --navy-tint: oklch(28% 0.05 262);
-    --signal: oklch(64% 0.18 27); --signal-ink: oklch(78% 0.13 27); --signal-tint: oklch(28% 0.06 27);
-    --ok: oklch(75% 0.12 155); --ok-tint: oklch(27% 0.05 155); --warn-ink: oklch(82% 0.1 80); --warn-tint: oklch(28% 0.05 80);
-    --on-dark: oklch(19% 0.03 262); --reel-bg: oklch(13% 0.03 262); color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: oklch(19% 0.03 262); --surface: oklch(23% 0.035 262); --sunk: oklch(17% 0.03 262);
-  --ink: oklch(94% 0.012 262); --ink-soft: oklch(82% 0.02 262); --ink-muted: oklch(70% 0.02 262);
-  --rule: oklch(34% 0.03 262); --navy: oklch(78% 0.09 262); --navy-tint: oklch(28% 0.05 262);
-  --signal: oklch(64% 0.18 27); --signal-ink: oklch(78% 0.13 27); --signal-tint: oklch(28% 0.06 27);
-  --ok: oklch(75% 0.12 155); --ok-tint: oklch(27% 0.05 155); --warn-ink: oklch(82% 0.1 80); --warn-tint: oklch(28% 0.05 80);
-  --on-dark: oklch(19% 0.03 262); --reel-bg: oklch(13% 0.03 262); color-scheme: dark;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.5; }
-main { max-width: 1240px; margin: 0 auto; padding: 22px 16px 48px; }
-header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 16px; }
-h1 { margin: 0; font-size: clamp(1.6rem, 2.6vw, 2.3rem); letter-spacing: -0.02em; }
-h2 { font-size: 1.2rem; margin: 0 0 6px; }
-.meta { color: var(--ink-muted); }
-.meta b { color: var(--ink); }
-.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; }
-.hidden { display: none !important; }
-label { display: block; font-weight: 600; margin-bottom: 6px; }
-.hint { color: var(--ink-muted); font-size: 0.95rem; margin: 6px 0 0; }
-input[type=text], input[type=number] { width: 100%; font: inherit; font-size: 1.3rem; padding: 11px 14px; border-radius: 8px; border: 2px solid var(--rule); background: var(--paper); color: var(--ink); }
-input:focus { outline: none; border-color: var(--navy); }
-input[type=file] { font: inherit; }
-.row { display: flex; gap: 12px; flex-wrap: wrap; }
-.row > * { flex: 1 1 170px; }
-button { font: inherit; font-weight: 700; border-radius: 8px; border: 2px solid transparent; cursor: pointer; padding: 12px 18px; background: var(--sunk); color: var(--ink); }
-button:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-primary { background: var(--navy); color: var(--on-dark); }
-.btn-ghost { background: transparent; border-color: var(--rule); color: var(--ink-soft); font-weight: 600; }
-.btn-spin { font-size: 1.5rem; padding: 14px 34px; background: var(--signal); color: #fff; }
-.toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-.msg { margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-weight: 600; }
-.msg.err { background: var(--signal-tint); color: var(--signal-ink); }
-.msg.warn { background: var(--warn-tint); color: var(--warn-ink); }
-.msg.ok { background: var(--ok-tint); color: var(--ok); }
 
-/* spin bar */
-.spinbar { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
-.spinbar .field { flex: 1 1 280px; }
+/* shell */
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm) var(--space-xl); padding-block: var(--space-md); border-bottom: var(--rule-hair) solid var(--color-rule); }
+.mark { font-family: var(--font-display); font-weight: 400; font-size: var(--text-xl); text-transform: uppercase; letter-spacing: var(--tracking-display); line-height: 1; }
+.status { display: flex; flex-wrap: wrap; gap: var(--space-lg); color: var(--color-muted); font-size: var(--text-sm); }
+.status b { color: var(--color-ink); font-weight: 400; }
+.status .num { color: var(--color-ink); }
+main { padding-block: var(--space-lg) var(--space-2xl); }
 
-/* reel */
-.reel { position: relative; margin-top: 16px; height: 190px; background: var(--reel-bg); border-radius: 12px; overflow: hidden; }
-.reel::before, .reel::after { content: ''; position: absolute; top: 0; bottom: 0; width: 18%; z-index: 2; pointer-events: none; }
-.reel::before { left: 0; background: linear-gradient(90deg, var(--reel-bg), transparent); }
-.reel::after { right: 0; background: linear-gradient(-90deg, var(--reel-bg), transparent); }
-.marker { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: var(--signal); z-index: 3; box-shadow: 0 0 14px var(--signal); }
-.marker::before, .marker::after { content: ''; position: absolute; left: 50%; margin-left: -10px; border: 10px solid transparent; }
-.marker::before { top: 0; border-top-color: var(--signal); }
-.marker::after { bottom: 0; border-bottom-color: var(--signal); }
-.strip { position: absolute; top: 15px; left: 0; display: flex; gap: 10px; will-change: transform; }
-.tile { flex: 0 0 150px; height: 160px; border-radius: 10px; background: var(--tile); color: var(--tile-ink); display: flex; flex-direction: column; justify-content: space-between; padding: 12px 12px 0; overflow: hidden; border-bottom: 8px solid var(--fam); }
-.tile .id { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 2.6rem; line-height: 1; }
-.tile .fam { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fam); }
-.tile .nm { font-size: 0.8rem; line-height: 1.25; opacity: 0.85; margin-bottom: 10px; }
-.tile.win { outline: 4px solid var(--signal); outline-offset: -4px; }
+/* controls */
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 var(--space-lg); border: var(--rule-hair) solid var(--color-ink-2); border-radius: 0; background: transparent; color: var(--color-ink); font: 400 var(--text-lg)/1 var(--font-display); text-transform: uppercase; cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), opacity var(--dur-micro) var(--ease-out); }
+.btn:hover { border-color: var(--color-ink); background: var(--color-paper-3); }
+.btn:active { background: var(--color-paper-2); }
+.btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; background: transparent; }
+.btn--primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-ink); }
+.btn--primary:hover { background: color-mix(in oklab, var(--color-accent) 88%, var(--color-ink)); border-color: var(--color-accent); }
+.btn--primary:active { background: var(--color-accent-deep); border-color: var(--color-accent-deep); color: var(--color-ink); }
+.btn--primary:disabled { background: var(--color-accent-deep); border-color: var(--color-accent-deep); color: var(--color-ink); }
+.btn--big { min-height: 64px; padding: 0 var(--space-2xl); font-size: var(--text-3xl); }
+.btn--quiet { border-color: var(--color-rule); color: var(--color-ink-2); font-size: var(--text-md); min-height: 40px; }
+.btn[aria-pressed="false"] { color: var(--color-muted); }
+
+label, .label { display: block; color: var(--color-muted); font-size: var(--text-sm); margin-bottom: var(--space-xs); }
+.field input[type=text], .field input[type=number] { width: 100%; min-height: 48px; padding: 0 var(--space-md); border: var(--rule-hair) solid var(--color-muted); border-radius: 0; background: var(--color-paper); color: var(--color-ink); font-size: var(--text-lg); transition: border-color var(--dur-micro) var(--ease-out); }
+.field input:hover { border-color: var(--color-ink-2); }
+.field input::placeholder { color: var(--color-muted); opacity: 0.7; }
+.field input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 0; border-color: var(--color-focus); }
+.field input:disabled { opacity: 0.4; cursor: not-allowed; }
+.field input[aria-invalid="true"] { border-color: var(--color-error); }
+.field--big input[type=text] { min-height: 64px; font-size: var(--text-2xl); }
+.file { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md); }
+.file input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.file input[type=file]:focus-visible + .btn { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.file .chosen { color: var(--color-ink-2); }
+.hint { color: var(--color-muted); font-size: var(--text-sm); margin-top: var(--space-xs); max-width: 70ch; }
+.note { margin-top: var(--space-md); padding: var(--space-sm) var(--space-md); border: var(--rule-hair) solid var(--color-rule); color: var(--color-ink-2); }
+.note[data-kind="err"] { border-color: var(--color-error); color: var(--color-error); }
+.note[data-kind="ok"] { border-color: var(--color-success); color: var(--color-success); }
+.note[data-kind="warn"] { border-color: var(--color-accent-deep); color: var(--color-accent); }
+
+/* setup */
+.setup { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-2xl); padding-block: var(--space-2xl); }
+.setup h1 { font-size: var(--text-hero); text-transform: uppercase; max-width: 14ch; }
+.setup .lead { margin-top: var(--space-md); color: var(--color-ink-2); }
+.setup form { display: grid; gap: var(--space-lg); }
+.row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md); }
+
+/* draw */
+.spinbar { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--space-md); align-items: end; }
+
+.reel { position: relative; height: var(--reel-h); margin-top: var(--space-lg); background: var(--color-paper-2); overflow: hidden; border-block: var(--rule-hair) solid var(--color-rule);
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--color-paper) 14%, var(--color-paper) 86%, transparent);
+          mask-image: linear-gradient(90deg, transparent, var(--color-paper) 14%, var(--color-paper) 86%, transparent); }
+.strip { position: absolute; top: var(--space-lg); left: 0; display: flex; gap: var(--tile-gap); will-change: transform; }
+.marker { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--color-accent); z-index: var(--z-raised); }
+.marker::before, .marker::after { content: ""; position: absolute; left: 50%; width: var(--space-md); height: var(--space-md); margin-left: calc(-1 * var(--space-xs)); background: var(--color-accent); transform: rotate(45deg); }
+.marker::before { top: calc(-1 * var(--space-xs)); }
+.marker::after { bottom: calc(-1 * var(--space-xs)); }
+
+.plate { flex: 0 0 var(--tile-w); height: calc(var(--reel-h) - 2 * var(--space-lg)); display: flex; flex-direction: column; justify-content: space-between; padding: var(--space-md); background: var(--color-paper-3); border: var(--rule-hair) solid var(--color-rule); transition: opacity var(--dur-long) var(--ease-out), border-color var(--dur-long) var(--ease-out); }
+.plate .id { font-family: var(--font-display); font-weight: 200; font-size: var(--text-plate); line-height: 1; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.plate .fam { color: var(--color-muted); font-size: var(--text-sm); }
+.plate .nm { color: var(--color-ink-2); font-size: var(--text-sm); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.reel.landed .plate { opacity: 0.28; }
+.reel.landed .plate.win { opacity: 1; border-color: var(--color-accent); }
+.reel.landed .plate.win .id { color: var(--color-accent); }
 
 /* result */
-.result { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; }
-@media (max-width: 860px) { .result, .lower { grid-template-columns: minmax(0, 1fr) !important; } }
-.res-card { padding: 18px; border-radius: 10px; background: var(--navy-tint); min-height: 168px; }
-.res-card .who { font-weight: 700; color: var(--ink-soft); font-size: 1.2rem; }
-.res-card .big { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: clamp(3rem, 7vw, 4.6rem); line-height: 1.05; color: var(--signal-ink); }
-.res-card .title { font-weight: 600; }
-.res-card .pair { margin-top: 6px; font-weight: 700; }
-.pair.wait { color: var(--warn-ink); }
-.pair.done { color: var(--ok); }
-.res-code { padding: 18px; border-radius: 10px; border: 2px dashed var(--rule); min-height: 168px; }
-.res-code .code { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: clamp(1.8rem, 3.6vw, 2.6rem); letter-spacing: 0.06em; margin: 4px 0; }
-.res-code .url { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: var(--ink-soft); word-break: break-all; }
+.result { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-2xl); margin-top: var(--space-xl); align-items: start; }
+.figure-block { min-width: 0; }
+.figure-block .team { color: var(--color-ink-2); font-size: var(--text-lg); min-height: 1.6em; }
+.figure-block .big { font-family: var(--font-display); font-weight: 200; font-size: var(--text-figure); line-height: 1; text-transform: uppercase; letter-spacing: var(--tracking-display); font-variant-numeric: tabular-nums; }
+.figure-block .big.lit { color: var(--color-accent); }
+.figure-block .title { margin-top: var(--space-sm); font-size: var(--text-xl); color: var(--color-ink); max-width: 26ch; text-wrap: balance; }
+.sheet { border-top: var(--rule-hair) solid var(--color-ink-2); }
+.sheet .r { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-md); padding-block: var(--space-sm); border-bottom: var(--rule-hair) solid var(--color-rule); align-items: baseline; }
+.sheet dt { color: var(--color-muted); font-size: var(--text-sm); }
+.sheet dd { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--text-2xl); text-transform: uppercase; line-height: 1.1; overflow-wrap: anywhere; }
+.sheet dd.code { font-size: var(--text-code); font-weight: 200; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+.sheet dd.wait { color: var(--color-accent); }
+.sheet dd.url { font-family: var(--font-body); font-size: var(--text-md); text-transform: none; color: var(--color-ink-2); }
+.left { margin-top: var(--space-lg); color: var(--color-muted); font-size: var(--text-sm); }
 
-.lower { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; margin-top: 16px; align-items: start; }
-.counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-.counts div { background: var(--sunk); border-radius: 6px; padding: 6px 8px; font-size: 0.9rem; border-left: 5px solid var(--fam); }
-.counts b { font-family: 'JetBrains Mono', monospace; }
-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
-th { color: var(--ink-muted); font-weight: 600; font-size: 0.88rem; }
-td.mono { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-td.wait { color: var(--warn-ink); }
-tr.latest td { background: var(--navy-tint); }
-.tablewrap { max-height: 50vh; overflow: auto; }
-.lock { color: var(--ink-muted); margin: 8px 0 0; }
+/* edition row */
+.edition { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); margin-top: var(--space-2xl); border-block: var(--rule-hair) solid var(--color-rule); }
+.edition > div { padding: var(--space-md); border-left: var(--rule-hair) solid var(--color-rule); }
+.edition > div:first-child { border-left: 0; }
+.edition .n { font-family: var(--font-display); font-weight: 200; font-size: var(--text-3xl); line-height: 1; text-transform: uppercase; }
+.edition .s { color: var(--color-muted); font-size: var(--text-sm); margin-top: var(--space-2xs); }
+
+/* sheet table */
+.lower { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); margin-top: var(--space-xl); }
+.lower-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-md); }
+.lower-head h2 { font-size: var(--text-2xl); text-transform: uppercase; font-weight: 200; }
+.tools { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.tablewrap { max-height: 46vh; overflow: auto; border-top: var(--rule-hair) solid var(--color-ink-2); }
+table { width: 100%; border-collapse: collapse; font-size: var(--text-md); }
+th, td { text-align: left; padding: var(--space-xs) var(--space-sm); border-bottom: var(--rule-hair) solid var(--color-rule); vertical-align: baseline; }
+th { position: sticky; top: 0; background: var(--color-paper); color: var(--color-muted); font-weight: 400; font-size: var(--text-sm); }
+td.num { font-family: var(--font-display); font-size: var(--text-xl); line-height: 1; }
+td.wait { color: var(--color-accent); }
+tr.latest td { background: var(--color-paper-2); }
+.empty { padding: var(--space-lg) var(--space-sm); color: var(--color-muted); }
+.save-note { color: var(--color-muted); font-size: var(--text-sm); }
+
+.grained { position: relative; isolation: isolate; }
+.grained::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: var(--grain); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 9 -4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 200px 200px; }
+
+@media (max-width: 60rem) {
+  .setup, .result { grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+  .edition { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .edition > div:nth-child(5) { border-left: 0; }
+  .spinbar { grid-template-columns: minmax(0, 1fr) auto; }
+  .spinbar .sound { grid-column: 1 / -1; justify-self: start; }
+  :root { --text-figure: 6rem; --tile-w: 150px; }
+}
+@media (max-width: 40rem) { .row3 { grid-template-columns: minmax(0, 1fr); } :root { --text-code: 2.074rem; } }
+@media (prefers-reduced-motion: reduce) { .plate { transition: none; } }
 </style>
 </head>
 <body>
-<main>
-  <header>
-    <h1>Quay thẻ sự cố · Day 10</h1>
-    <div class="meta" id="meta"></div>
-  </header>
+<header class="container bar">
+  <div class="mark">Day 10 thẻ sự cố</div>
+  <div class="status" id="status"><span>Chưa tạo túi thẻ</span></div>
+</header>
 
-  <!-- Setup -->
-  <section class="panel" id="setup">
-    <h2>Chuẩn bị (coach làm một lần, trước 16:00)</h2>
-    <p class="hint">Mỗi cụm dùng một trang trên máy của coach phụ trách cụm. Trang chia đều 8 thẻ cho các cặp. Hai nhóm cùng cặp luôn cùng thẻ. Nếu số nhóm lẻ, một cặp có 3 nhóm.</p>
-    <div class="row" style="margin-top:12px">
-      <div><label for="cls">Lớp</label><input type="text" id="cls" placeholder="L3A" autocomplete="off"></div>
-      <div><label for="cluster">Cụm</label><input type="text" id="cluster" placeholder="Cụm 1" autocomplete="off"></div>
-      <div><label for="n">Số nhóm trong cụm</label><input type="number" id="n" min="2" max="400" value="16"></div>
+<main class="container">
+  <noscript><p class="note" data-kind="err">Trang này cần JavaScript để quay thẻ. Bật JavaScript rồi tải lại trang.</p></noscript>
+
+  <!-- setup -->
+  <section class="setup" id="setup" aria-labelledby="setup-h">
+    <div>
+      <h1 id="setup-h">Chuẩn bị túi thẻ</h1>
+      <p class="lead">Coach làm một lần cho cụm của mình, trước 16:00. Trang chia đều 8 thẻ cho các cặp. Hai nhóm cùng cặp luôn cùng thẻ; nếu số nhóm lẻ, một cặp có 3 nhóm.</p>
     </div>
-    <div style="margin-top:12px">
-      <label for="codes">File mã tải thẻ của cụm (<code>codes-cum-XX.csv</code>)</label>
-      <input type="file" id="codes" accept=".csv,text/csv">
-      <p class="hint">Mỗi cụm dùng một file mã riêng. Không dùng chung một file cho hai cụm. Số mã phải lớn hơn hoặc bằng số nhóm.</p>
-    </div>
-    <div id="setupMsg"></div>
-    <div class="toolbar"><button class="btn-primary" id="create">Tạo túi thẻ</button></div>
+    <form id="setupForm" novalidate>
+      <div class="row3">
+        <div class="field"><label for="cls">Lớp</label><input type="text" id="cls" placeholder="L3A" autocomplete="off"></div>
+        <div class="field"><label for="cluster">Cụm</label><input type="text" id="cluster" placeholder="Cụm 1" autocomplete="off"></div>
+        <div class="field"><label for="n">Số nhóm trong cụm</label><input type="number" id="n" min="2" max="400" value="16"></div>
+      </div>
+      <div>
+        <span class="label" id="codes-l">File mã tải thẻ của cụm (codes-cum-XX.csv)</span>
+        <div class="file">
+          <input type="file" id="codes" accept=".csv,text/csv" aria-labelledby="codes-l">
+          <label class="btn btn--quiet" for="codes" style="margin:0">Chọn file mã</label>
+          <span class="chosen" id="chosen">Chưa chọn file</span>
+        </div>
+        <p class="hint">Mỗi cụm dùng một file mã riêng. Số mã phải lớn hơn hoặc bằng số nhóm.</p>
+      </div>
+      <div id="setupMsg" aria-live="polite"></div>
+      <div><button class="btn btn--primary" type="submit" id="create">Tạo túi thẻ</button></div>
+    </form>
   </section>
 
-  <!-- Draw -->
-  <section id="draw" class="hidden">
-    <div class="panel">
-      <div class="spinbar">
-        <div class="field">
-          <label for="team">Nhóm trưởng gõ tên nhóm</label>
-          <input type="text" id="team" placeholder="Ví dụ: NhomSao" autocomplete="off" spellcheck="false">
-        </div>
-        <button class="btn-spin" id="spin">Quay</button>
+  <!-- draw -->
+  <section id="draw" hidden aria-label="Quay thẻ">
+    <div class="spinbar">
+      <div class="field field--big">
+        <label for="team">Nhóm trưởng gõ tên nhóm</label>
+        <input type="text" id="team" placeholder="Ví dụ: NhomSao" autocomplete="off" spellcheck="false">
       </div>
-      <div id="drawMsg"></div>
-      <div class="reel" aria-hidden="true"><div class="marker"></div><div class="strip" id="strip"></div></div>
-
-      <div class="result" aria-live="polite">
-        <div class="res-card">
-          <div class="who" id="who">Chờ lượt quay</div>
-          <div class="big" id="big">—</div>
-          <div class="title" id="ctitle"></div>
-          <div class="pair" id="pair"></div>
-        </div>
-        <div class="res-code">
-          <div class="who">Mã tải thẻ</div>
-          <div class="code" id="code">—</div>
-          <div class="url">Tải tại: <span id="url"></span></div>
-          <p class="hint">Chụp màn hình hoặc chép mã. Nhập mã ở trang trên để tải gói thẻ.</p>
-        </div>
-      </div>
-      <p class="lock" id="left"></p>
+      <button class="btn btn--primary btn--big" type="button" id="spin">Quay</button>
+      <button class="btn btn--quiet sound" type="button" id="sound" aria-pressed="true">Âm thanh bật</button>
     </div>
+    <div id="drawMsg" aria-live="polite"></div>
+
+    <div class="reel grained" id="reel" aria-hidden="true"><div class="marker"></div><div class="strip" id="strip"></div></div>
+
+    <div class="result" aria-live="polite">
+      <div class="figure-block">
+        <div class="team" id="who">Chờ lượt quay</div>
+        <div class="big" id="big">S?</div>
+        <div class="title" id="ctitle"></div>
+      </div>
+      <dl class="sheet">
+        <div class="r"><dt>Cặp</dt><dd id="pairNo">Chưa có</dd></div>
+        <div class="r"><dt>Cặp với</dt><dd id="pairWith">Chưa có</dd></div>
+        <div class="r"><dt>Mã tải thẻ</dt><dd class="code" id="code">Chưa có</dd></div>
+        <div class="r"><dt>Tải thẻ tại</dt><dd class="url" id="url"></dd></div>
+      </dl>
+    </div>
+    <p class="left" id="left"></p>
+
+    <div class="edition" id="counts"></div>
 
     <div class="lower">
-      <div class="panel">
-        <h2>Số cặp theo thẻ</h2>
-        <div class="counts" id="counts"></div>
-        <div class="toolbar">
-          <button class="btn-primary" id="csv">Tải bảng (CSV)</button>
-          <button class="btn-ghost" id="undo">Hoàn tác lượt cuối</button>
-          <button class="btn-ghost" id="reset">Xoá hết, làm lại</button>
-        </div>
-        <p class="hint">Bảng lưu trên trình duyệt của máy này. Tải lại trang không mất bảng. Cuối giờ, bấm “Tải bảng” và gửi cho Lab Coach.</p>
-      </div>
-      <div class="panel">
-        <h2>Kết quả</h2>
-        <div class="tablewrap">
-          <table>
-            <thead><tr><th>#</th><th>Nhóm</th><th>Thẻ</th><th>Cặp</th><th>Cặp với</th><th>Mã</th><th>Giờ</th></tr></thead>
-            <tbody id="rows"></tbody>
-          </table>
+      <div class="lower-head">
+        <h2>Kết quả của cụm</h2>
+        <div class="tools">
+          <button class="btn btn--quiet" type="button" id="csv">Tải bảng CSV</button>
+          <button class="btn btn--quiet" type="button" id="undo">Hoàn tác lượt cuối</button>
+          <button class="btn btn--quiet" type="button" id="reset">Xoá hết, làm lại</button>
         </div>
       </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th scope="col">Lượt</th><th scope="col">Nhóm</th><th scope="col">Thẻ</th><th scope="col">Cặp</th><th scope="col">Cặp với</th><th scope="col">Mã</th><th scope="col">Giờ</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <p class="empty" id="empty">Chưa nhóm nào quay. Nhóm trưởng gõ tên nhóm rồi bấm Quay.</p>
+      </div>
+      <p class="save-note">Bảng lưu trên trình duyệt của máy này; tải lại trang không mất bảng. Cuối giờ, bấm Tải bảng CSV và gửi cho Lab Coach.</p>
     </div>
   </section>
 </main>
@@ -198,17 +241,18 @@ tr.latest td { background: var(--navy-tint); }
 (() => {
   const DOWNLOAD_URL = 'https://sagitakdx.github.io/k5-day10-cards/';
   const CARDS = {
-    S1: ['tech', 'Kỹ thuật', 'Hãng Sông Hồng khiếu nại bị ghi lỗi oan'],
-    S2: ['tech', 'Kỹ thuật', 'Đối soát: shop bị trừ tiền lạ'],
-    S3: ['tech', 'Kỹ thuật', 'Hãng miền Tây bị phạt vì bão'],
-    S4: ['ops', 'Vận hành', 'Đêm 11.11: ticket gấp ba, hàng chờ duyệt ngập'],
-    S5: ['biz', 'Kinh doanh', 'CFO: mỗi ticket qua trợ lý đang đắt hơn làm tay'],
-    S6: ['tech', 'Kỹ thuật', 'Tài xế bị trừ thưởng vì kiện của hãng khác'],
-    S7: ['legal', 'Pháp lý', 'Email pháp chế: lộ số điện thoại người nhận quà'],
-    S8: ['people', 'Con người', 'Trưởng ca CSKH: chúng tôi không tin trợ lý, đang kiểm tay hết'],
+    S1: ['Kỹ thuật', 'Hãng Sông Hồng khiếu nại bị ghi lỗi oan'],
+    S2: ['Kỹ thuật', 'Đối soát: shop bị trừ tiền lạ'],
+    S3: ['Kỹ thuật', 'Hãng miền Tây bị phạt vì bão'],
+    S4: ['Vận hành', 'Đêm 11.11: ticket gấp ba, hàng chờ duyệt ngập'],
+    S5: ['Kinh doanh', 'CFO: mỗi ticket qua trợ lý đang đắt hơn làm tay'],
+    S6: ['Kỹ thuật', 'Tài xế bị trừ thưởng vì kiện của hãng khác'],
+    S7: ['Pháp lý', 'Email pháp chế: lộ số điện thoại người nhận quà'],
+    S8: ['Con người', 'Trưởng ca CSKH: chúng tôi không tin trợ lý, đang kiểm tay hết'],
   };
   const IDS = Object.keys(CARDS);
   const KEY = 'k5-day10-card-draw-v2';
+  const SOUND_KEY = 'k5-day10-card-draw-sound';
   const $ = (id) => document.getElementById(id);
   $('url').textContent = DOWNLOAD_URL;
 
@@ -238,146 +282,190 @@ tr.latest td { background: var(--navy-tint); }
 
   let state = null;
   let pendingCodes = null;
+  let spinning = false;
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
   const load = () => { try { const s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } };
-  const message = (el, kind, text) => { $(el).innerHTML = text ? `<div class="msg ${kind}">${text}</div>` : ''; };
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const norm = (s) => s.trim().toLowerCase();
-  const famVar = (id) => `var(--fam-${CARDS[id][0]})`;
+  function message(el, kind, text) {
+    $(el).innerHTML = text ? `<p class="note" data-kind="${kind}">${text}</p>` : '';
+  }
+
+  /* sound: short synthesized ticks while plates pass the marker, one low tone on landing */
+  let soundOn = true; try { soundOn = localStorage.getItem(SOUND_KEY) !== 'off'; } catch (e) {}
+  let ctx = null;
+  function audio() { if (!soundOn) return null; try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); return ctx; } catch (e) { return null; } }
+  function blip(freq, dur, vol) {
+    const a = audio(); if (!a) return;
+    const o = a.createOscillator(); const g = a.createGain();
+    o.type = 'triangle'; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, a.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
+    o.connect(g).connect(a.destination); o.start(); o.stop(a.currentTime + dur);
+  }
+  function renderSound() { $('sound').setAttribute('aria-pressed', String(soundOn)); $('sound').textContent = soundOn ? 'Âm thanh bật' : 'Âm thanh tắt'; }
+  $('sound').addEventListener('click', () => { soundOn = !soundOn; try { localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); } catch (e) {} renderSound(); });
+  renderSound();
 
   $('codes').addEventListener('change', async (e) => {
     const f = e.target.files[0]; if (!f) return;
     const text = await f.text();
     const codes = [...text.matchAll(/\b([2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4})\b/g)].map((m) => m[1]);
     pendingCodes = [...new Set(codes)];
-    message('setupMsg', pendingCodes.length ? 'ok' : 'err', pendingCodes.length ? `Đã đọc ${pendingCodes.length} mã từ ${esc(f.name)}.` : 'Không tìm thấy mã nào trong file này.');
+    $('chosen').textContent = f.name;
+    message('setupMsg', pendingCodes.length ? 'ok' : 'err', pendingCodes.length ? `Đã đọc ${pendingCodes.length} mã từ ${esc(f.name)}.` : 'Không tìm thấy mã nào trong file này. Chọn đúng file codes-cum-XX.csv.');
   });
 
   function partners(d) { return state.draws.filter((x) => x.pair === d.pair && x !== d).map((x) => x.team); }
   function pairText(d) {
     const p = partners(d); const missing = state.pairSize[d.pair] - 1 - p.length;
-    if (!p.length) return { text: 'đang chờ nhóm cặp', done: false };
-    return { text: p.join(', ') + (missing > 0 ? ' · còn chờ 1 nhóm' : ''), done: missing === 0 };
+    if (!p.length) return { text: 'Đang chờ nhóm cặp', done: false };
+    return { text: p.join(', ') + (missing > 0 ? ', còn chờ 1 nhóm' : ''), done: missing === 0 };
   }
 
-  function tileHTML(id, extra = '') {
-    const [, fam, name] = CARDS[id];
-    return `<div class="tile ${extra}" style="--fam:${famVar(id)}"><div class="id">${id}</div><div><div class="fam">${fam}</div><div class="nm">${esc(name)}</div></div></div>`;
-  }
-  const TILE_W = 160; // 150 px tile + 10 px gap
+  const plate = (id) => `<div class="plate"><div class="id">${id}</div><div><div class="fam">${CARDS[id][0]}</div><div class="nm">${esc(CARDS[id][1])}</div></div></div>`;
+  const step = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tile-w')) + 12;
   function idleStrip() {
-    const ids = []; for (let i = 0; i < 24; i++) ids.push(IDS[i % 8]);
-    $('strip').style.transition = 'none';
-    $('strip').innerHTML = ids.map((id) => tileHTML(id)).join('');
-    const reelW = $('strip').parentElement.clientWidth;
-    $('strip').style.transform = `translateX(${reelW / 2 - TILE_W * 4 - 75}px)`;
+    const strip = $('strip');
+    const ids = []; for (let i = 0; i < 32; i++) ids.push(IDS[i % 8]);
+    strip.style.transition = 'none';
+    strip.innerHTML = ids.map(plate).join('');
+    $('reel').classList.remove('landed');
+    const w = $('reel').clientWidth, s = step();
+    strip.style.transform = `translateX(${w / 2 - s * 12 - (s - 12) / 2}px)`;
   }
 
   function render() {
     const setup = !state;
-    $('setup').classList.toggle('hidden', !setup);
-    $('draw').classList.toggle('hidden', setup);
-    if (setup) { $('meta').textContent = ''; return; }
-    $('meta').innerHTML = `<b>${esc(state.cls || '—')}</b> · <b>${esc(state.cluster || '—')}</b> · ${state.draws.length}/${state.n} nhóm đã quay`;
+    $('setup').hidden = !setup;
+    $('draw').hidden = setup;
+    if (setup) { $('status').innerHTML = '<span>Chưa tạo túi thẻ</span>'; return; }
     const left = state.bag.length;
-    $('left').textContent = left ? `Còn ${left} lượt quay. Còn ${state.codes.length - state.draws.length} mã.` : 'Đã quay hết. Bấm “Tải bảng (CSV)” để lưu kết quả.';
+    $('status').innerHTML = `<span>Lớp <b>${esc(state.cls || 'chưa ghi')}</b></span><span>${esc(state.cluster || 'Cụm chưa ghi')}</span><span><span class="num">${state.draws.length}</span> trên <span class="num">${state.n}</span> nhóm đã quay</span>`;
+    $('left').textContent = left ? `Còn ${left} lượt quay và ${state.codes.length - state.draws.length} mã.` : 'Đã quay hết. Bấm Tải bảng CSV để lưu kết quả.';
     $('spin').disabled = left === 0 || spinning;
-    $('team').disabled = left === 0;
+    $('team').disabled = left === 0 || spinning;
     $('undo').disabled = state.draws.length === 0 || spinning;
+    $('reset').disabled = spinning;
+    $('csv').disabled = state.draws.length === 0;
     const pairsPer = Object.fromEntries(IDS.map((c) => [c, 0]));
     state.pairCards.forEach((c) => pairsPer[c]++);
     const drawn = Object.fromEntries(IDS.map((c) => [c, 0]));
     state.draws.forEach((d) => drawn[d.card]++);
-    $('counts').innerHTML = IDS.map((c) => `<div style="--fam:${famVar(c)}"><b>${c}</b> · ${pairsPer[c]} cặp · ${drawn[c]} đã quay</div>`).join('');
+    $('counts').innerHTML = IDS.map((c) => `<div><div class="n">${c}</div><div class="s">${pairsPer[c]} cặp</div><div class="s">${drawn[c]} đã quay</div></div>`).join('');
     const last = state.draws[state.draws.length - 1];
+    $('empty').hidden = state.draws.length > 0;
     $('rows').innerHTML = state.draws.slice().reverse().map((d, i) => {
       const pt = pairText(d);
-      return `<tr class="${d === last ? 'latest' : ''}"><td>${state.draws.length - i}</td><td>${esc(d.team)}</td><td class="mono">${d.card}</td>` +
-        `<td>${d.pair}</td><td class="${pt.done ? '' : 'wait'}">${esc(pt.text)}</td><td class="mono">${esc(d.code)}</td><td>${d.at}</td></tr>`;
+      return `<tr class="${d === last ? 'latest' : ''}"><td>${state.draws.length - i}</td><td>${esc(d.team)}</td><td class="num">${d.card}</td>` +
+        `<td>${d.pair}</td><td class="${pt.done ? '' : 'wait'}">${esc(pt.text)}</td><td>${esc(d.code)}</td><td>${d.at}</td></tr>`;
     }).join('');
   }
 
-  function showResult(d) {
+  function showResult(d, lit) {
     $('who').textContent = d.team;
     $('big').textContent = d.card;
-    $('ctitle').textContent = CARDS[d.card][2];
+    $('big').classList.toggle('lit', !!lit);
+    $('ctitle').textContent = CARDS[d.card][1];
     const pt = pairText(d);
-    $('pair').textContent = `Cặp ${d.pair} · cặp với: ${pt.text}`;
-    $('pair').className = 'pair ' + (pt.done ? 'done' : 'wait');
+    $('pairNo').textContent = `Cặp ${d.pair}`;
+    $('pairWith').textContent = pt.text;
+    $('pairWith').classList.toggle('wait', !pt.done);
     $('code').textContent = d.code;
   }
-  function clearResult() {
-    $('who').textContent = 'Chờ lượt quay'; $('big').textContent = '—'; $('ctitle').textContent = ''; $('pair').textContent = ''; $('code').textContent = '—';
+  function clearResult(team) {
+    $('who').textContent = team || 'Chờ lượt quay'; $('big').textContent = 'S?'; $('big').classList.remove('lit'); $('ctitle').textContent = '';
+    $('pairNo').textContent = 'Chưa có'; $('pairWith').textContent = 'Chưa có'; $('pairWith').classList.remove('wait'); $('code').textContent = 'Chưa có';
   }
 
-  $('create').addEventListener('click', () => {
+  $('setupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
     const n = parseInt($('n').value, 10);
-    if (!Number.isInteger(n) || n < 2 || n > 400) { message('setupMsg', 'err', 'Số nhóm phải từ 2 đến 400.'); return; }
+    $('n').removeAttribute('aria-invalid');
+    if (!Number.isInteger(n) || n < 2 || n > 400) { $('n').setAttribute('aria-invalid', 'true'); message('setupMsg', 'err', 'Số nhóm phải từ 2 đến 400.'); $('n').focus(); return; }
     if (!pendingCodes || !pendingCodes.length) { message('setupMsg', 'err', 'Chọn file mã của cụm trước.'); return; }
     if (pendingCodes.length < n) { message('setupMsg', 'err', `File có ${pendingCodes.length} mã, ít hơn ${n} nhóm. Dùng thêm một file mã khác.`); return; }
     const { bag, pairSize, pairCards } = makeBag(n);
     state = { cls: $('cls').value.trim(), cluster: $('cluster').value.trim(), n, bag, pairSize, pairCards, codes: pendingCodes, draws: [] };
-    save(); render(); idleStrip(); $('team').focus();
+    save(); render(); idleStrip(); clearResult(); $('team').focus();
   });
 
-  let spinning = false;
   $('spin').addEventListener('click', () => {
     if (spinning || !state || !state.bag.length) return;
     const team = $('team').value.trim();
-    if (!team) { message('drawMsg', 'err', 'Gõ tên nhóm trước khi quay.'); $('team').focus(); return; }
-    if (state.draws.some((d) => norm(d.team) === norm(team))) { message('drawMsg', 'err', `Nhóm “${esc(team)}” đã quay rồi.`); return; }
+    $('team').removeAttribute('aria-invalid');
+    if (!team) { $('team').setAttribute('aria-invalid', 'true'); message('drawMsg', 'err', 'Gõ tên nhóm trước khi quay.'); $('team').focus(); return; }
+    if (state.draws.some((d) => norm(d.team) === norm(team))) { $('team').setAttribute('aria-invalid', 'true'); message('drawMsg', 'err', `Nhóm “${esc(team)}” đã quay rồi.`); return; }
     const odd = /\s/.test(team) || /[^\x00-\x7F]/.test(team);
-    message('drawMsg', odd ? 'warn' : '', odd ? 'Tên có dấu hoặc khoảng trắng. Vẫn ghi nhận, nhưng hãy kiểm lại tên repo.' : '');
+    message('drawMsg', 'warn', odd ? 'Tên có dấu hoặc khoảng trắng. Trang vẫn ghi nhận; nhóm kiểm lại tên repo.' : '');
 
     const seat = state.bag.pop();
     const d = { team, card: seat.card, pair: seat.pair, code: state.codes[state.draws.length],
       at: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) };
-    state.draws.push(d); save();   // saved before the animation: a reload cannot re-roll
+    state.draws.push(d); save();   // saved before the reel moves: a reload cannot re-roll
 
-    spinning = true; $('spin').disabled = true; $('undo').disabled = true; clearResult(); $('who').textContent = team;
-    const WIN = 52, TOTAL = 60;
+    spinning = true; render(); clearResult(team);
+    const WIN = 54, TOTAL = 62;
     const ids = Array.from({ length: TOTAL }, () => IDS[rand(8)]);
     ids[WIN] = d.card;
-    const strip = $('strip');
+    const strip = $('strip'); const reel = $('reel');
+    reel.classList.remove('landed');
     strip.style.transition = 'none';
-    strip.innerHTML = ids.map((id) => tileHTML(id)).join('');
-    const reelW = strip.parentElement.clientWidth;
-    strip.style.transform = `translateX(${reelW / 2 - TILE_W * 2 - 75}px)`;
+    strip.innerHTML = ids.map(plate).join('');
+    const w = reel.clientWidth, s = step(), tile = s - 12;
+    const start = w / 2 - s * 3 - tile / 2;
+    strip.style.transform = `translateX(${start}px)`;
     void strip.offsetWidth;
-    const jitter = (rand(1000) / 1000 - 0.5) * 110;  // land somewhere inside the tile, not always the centre
-    const target = reelW / 2 - (TILE_W * WIN + 75) + jitter;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const jitter = (rand(1000) / 1000 - 0.5) * tile * 0.7;
+    const target = w / 2 - (s * WIN + tile / 2) + jitter;
+
     const finish = () => {
       strip.children[WIN].classList.add('win');
-      spinning = false; showResult(d); render(); $('team').value = ''; $('team').focus();
+      reel.classList.add('landed');
+      blip(220, 0.45, 0.22); setTimeout(() => blip(330, 0.6, 0.18), 110);
+      spinning = false; showResult(d, true); render();
+      $('team').value = ''; $('team').focus();
     };
-    if (reduce) { strip.style.transform = `translateX(${target}px)`; finish(); return; }
-    strip.style.transition = 'transform 6s cubic-bezier(0.08, 0.72, 0.16, 1)';
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      strip.style.transform = `translateX(${target}px)`; finish(); return;
+    }
+    strip.style.transition = `transform var(--spin-dur) var(--ease-reel)`;
     strip.style.transform = `translateX(${target}px)`;
+    // tick each time a plate edge crosses the marker
+    let lastIdx = null;
+    const tick = () => {
+      if (!spinning) return;
+      const x = new DOMMatrixReadOnly(getComputedStyle(strip).transform).m41;
+      const idx = Math.floor((w / 2 - x) / s);
+      if (lastIdx !== null && idx !== lastIdx) blip(1400 + rand(300), 0.035, 0.08);
+      lastIdx = idx;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
     strip.addEventListener('transitionend', finish, { once: true });
   });
-  $('team').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('spin').click(); });
+  $('team').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('spin').click(); } });
 
   $('undo').addEventListener('click', () => {
     if (!state || !state.draws.length || spinning) return;
     const d = state.draws[state.draws.length - 1];
-    if (!confirm(`Hoàn tác lượt của nhóm “${d.team}” (thẻ ${d.card}, mã ${d.code})? Chỗ này được trả lại vào túi. Nhóm kế tiếp sẽ nhận mã này.`)) return;
+    if (!confirm(`Hoàn tác lượt của nhóm “${d.team}” (thẻ ${d.card}, mã ${d.code})? Chỗ này trở lại túi, và nhóm kế tiếp nhận mã này.`)) return;
     state.draws.pop(); state.bag.push({ pair: d.pair, card: d.card }); shuffle(state.bag);
     save(); render(); clearResult(); idleStrip();
   });
 
   $('reset').addEventListener('click', () => {
+    if (spinning) return;
     if (!confirm('Xoá toàn bộ kết quả của cụm này và làm lại từ đầu? Không khôi phục được.')) return;
     if (state && state.draws.length && !confirm('Đã có nhóm quay. Bấm OK lần nữa để xoá.')) return;
     state = null; pendingCodes = null; try { localStorage.removeItem(KEY); } catch (e) {}
-    $('drawMsg').innerHTML = ''; $('setupMsg').innerHTML = ''; $('codes').value = ''; render();
+    $('drawMsg').innerHTML = ''; $('setupMsg').innerHTML = ''; $('codes').value = ''; $('chosen').textContent = 'Chưa chọn file'; render();
   });
 
   $('csv').addEventListener('click', () => {
     if (!state) return;
     const q = (v) => `"${String(v).replace(/"/g, '""')}"`;
     const lines = [['lop', 'cum', 'luot', 'ten_nhom', 'the', 'ten_the', 'cap', 'cap_voi', 'ma_tai_the', 'gio'].join(',')];
-    state.draws.forEach((d, i) => lines.push([state.cls, state.cluster, i + 1, d.team, d.card, CARDS[d.card][2], d.pair, partners(d).join(' / '), d.code, d.at].map(q).join(',')));
+    state.draws.forEach((d, i) => lines.push([state.cls, state.cluster, i + 1, d.team, d.card, CARDS[d.card][1], d.pair, partners(d).join(' / '), d.code, d.at].map(q).join(',')));
     const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -390,7 +478,7 @@ tr.latest td { background: var(--navy-tint); }
   if (state) {
     idleStrip();
     const last = state.draws[state.draws.length - 1];
-    if (last) showResult(last);
+    if (last) showResult(last, false);
   }
   addEventListener('resize', () => { if (state && !spinning) idleStrip(); });
 })();
